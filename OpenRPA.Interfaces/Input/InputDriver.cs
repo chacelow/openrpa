@@ -150,6 +150,7 @@ namespace OpenRPA.Input
         }
         public bool CallNext { get; set; }
         public bool AllowOneClick { get; set; }
+        public bool IsInitialized => isInitialized;
         private IntPtr LowLevelKeyboardProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode >= NativeMethods.HC_ACTION)

@@ -59,6 +59,10 @@ namespace OpenRPA
             }
             SetStatus("Initializing events");
             DataContext = this;
+            // Eagerly populate capture modes so RibbonGallery binding resolves before UI renders
+            _recordingCaptureModes.Add(new capturemode("UIA", RecordingCaptureMode.UIA));
+            _recordingCaptureModes.Add(new capturemode("MSAA", RecordingCaptureMode.MSAA));
+            _recordingCaptureModes.Add(new capturemode(OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_image") ?? "Image", RecordingCaptureMode.Image));
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -217,6 +221,12 @@ namespace OpenRPA
             }
             public string Name { get; set; }
             public RecordingCaptureMode Value { get; set; }
+            public override bool Equals(object obj)
+            {
+                if (obj is capturemode other) return this.Value == other.Value;
+                return false;
+            }
+            public override int GetHashCode() => Value.GetHashCode();
         }
         // private ObservableCollection<string> _uilocals = null;
         private readonly ObservableCollection<uilocal> _uilocals = new ObservableCollection<uilocal>();
@@ -234,6 +244,19 @@ namespace OpenRPA
                 return _recordingCaptureModes;
             }
             set { }
+        }
+        private string _recordingStatusMessage = "";
+        public string RecordingStatusMessage
+        {
+            get => _recordingStatusMessage;
+            set
+            {
+                if (_recordingStatusMessage != value)
+                {
+                    _recordingStatusMessage = value;
+                    NotifyPropertyChanged("RecordingStatusMessage");
+                }
+            }
         }
         public string recordingCaptureModeLabel => OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode") ?? "Capture Mode";
         public string recordingOverlayLabel => OpenRPA.Resources.strings.ResourceManager.GetString("recordingoverlay") ?? "Recording Overlay";
@@ -255,6 +278,21 @@ namespace OpenRPA
                 {
                     Config.local.recording_capture_mode = value.Value;
                     Config.Save();
+                    NotifyPropertyChanged("defaultrecordingcapturemode");
+                    NotifyPropertyChanged("defaultrecordingcapturemodeValue");
+                }
+            }
+        }
+        public RecordingCaptureMode defaultrecordingcapturemodeValue
+        {
+            get => Config.local.recording_capture_mode;
+            set
+            {
+                if (value != Config.local.recording_capture_mode)
+                {
+                    Config.local.recording_capture_mode = value;
+                    Config.Save();
+                    NotifyPropertyChanged("defaultrecordingcapturemodeValue");
                     NotifyPropertyChanged("defaultrecordingcapturemode");
                 }
             }
@@ -2991,7 +3029,7 @@ namespace OpenRPA
                 if (isRecording)
                 {
                     StartDetectorPlugins();
-                    StopRecordPlugins(true);
+                    StopRecordPlugins();
                     designer.ReadOnly = false;
                     InputDriver.Instance.CallNext = true;
                     InputDriver.Instance.OnKeyDown -= OnKeyDown;
@@ -3034,7 +3072,7 @@ namespace OpenRPA
         {
             if (!isRecording) return;
             StartDetectorPlugins();
-            StopRecordPlugins(true);
+            StopRecordPlugins();
             if (SelectedContent is Views.WFDesigner view)
             {
                 view.ReadOnly = false;
@@ -3197,7 +3235,45 @@ namespace OpenRPA
             Log.FunctionOutdent("MainWindow", "StopDetectorPlugins");
         }
         Interfaces.Overlay.OverlayWindow _overlayWindow = null;
-        private void StartRecordPlugins(bool all)
+        private string GetRecordPluginNameForCaptureMode()
+        {
+            switch (Config.local.recording_capture_mode)
+            {
+                case RecordingCaptureMode.Image:
+                    return "Image";
+                case RecordingCaptureMode.MSAA:
+                    return "MSAA";
+                default:
+                    return "Windows";
+            }
+        }
+        private bool ValidateCaptureModePipeline()
+        {
+            var mode = Config.local.recording_capture_mode;
+            if (mode == RecordingCaptureMode.UIA) return true;
+            var parserName = GetRecordPluginNameForCaptureMode();
+            var parserExists = Plugins.recordPlugins.Any(x => x.Name == parserName);
+            if (!parserExists)
+            {
+                string message;
+                switch (mode)
+                {
+                    case RecordingCaptureMode.Image:
+                        message = OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_image_unavailable") ?? "Image capture mode is not available in this build.";
+                        break;
+                    case RecordingCaptureMode.MSAA:
+                        message = OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_msaa_unavailable") ?? "MSAA capture mode is not available in this build.";
+                        break;
+                    default:
+                        message = "Selected capture mode is not available.";
+                        break;
+                }
+                MessageBox.Show(message);
+                return false;
+            }
+            return true;
+        }
+        private void StartRecordPlugins()
         {
             Log.FunctionIndent("MainWindow", "StartRecordPlugins");
             try
@@ -3218,7 +3294,7 @@ namespace OpenRPA
                 }
 
                 p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
-                if (p != null && (all == true || all == false))
+                if (p != null)
                 {
                     p.OnUserAction += OnUserAction;
                     if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
@@ -3232,7 +3308,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("MainWindow", "StartRecordPlugins");
         }
-        private void StopRecordPlugins(bool all)
+        private void StopRecordPlugins()
         {
             Log.FunctionIndent("MainWindow", "StopRecordPlugins");
             try
@@ -3244,7 +3320,7 @@ namespace OpenRPA
                 p.Stop();
 
                 p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
-                if (p != null && (all == true || all == false))
+                if (p != null)
                 {
                     p.OnUserAction -= OnUserAction;
                     p.Stop();
@@ -3315,19 +3391,12 @@ namespace OpenRPA
         public void OnUserAction(IRecordPlugin sender, IRecordEvent e)
         {
             Log.FunctionIndent("MainWindow", "OnUserAction");
-            if (sender.Name == "Windows") StopRecordPlugins(false);
+            if (sender.Name == "Windows") StopRecordPlugins();
             AutomationHelper.syncContext.Post(o =>
             {
                 IPlugin plugin = sender;
                 try
                 {
-                    if (Config.local.recording_capture_mode == RecordingCaptureMode.MSAA && !Plugins.recordPlugins.Any(x => x.Name == "MSAA"))
-                    {
-                        if (sender.Name == "Windows") StartRecordPlugins(false);
-                        MessageBox.Show(OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_msaa_unavailable") ?? "MSAA capture mode is not available in this build.");
-                        Log.Function("MainWindow", "OnUserAction", "MSAA capture mode is not available");
-                        return;
-                    }
                     if (sender.Name == "Windows")
                     {
                         foreach (var p in Plugins.recordPlugins.OrderBy(x => x.Priority))
@@ -3351,8 +3420,22 @@ namespace OpenRPA
                     }
                     if (e.a == null)
                     {
-                        if (sender.Name == "Windows") StartRecordPlugins(false);
-                        if (e.ClickHandled == false)
+                        if (sender.Name == "Windows") StartRecordPlugins();
+                        if (e.ClickHandled)
+                        {
+                            // ClickHandled=true with a=null means capture failed (e.g., insufficient selector)
+                            var failMsg = OpenRPA.Resources.strings.ResourceManager.GetString("recording_click_not_captured") ?? "Click not captured — try a different element";
+                            var activeMsg = OpenRPA.Resources.strings.ResourceManager.GetString("recording_status_active") ?? "Recording…";
+                            RecordingStatusMessage = failMsg;
+                            var clearTimer = new System.Timers.Timer(3000) { AutoReset = false };
+                            clearTimer.Elapsed += (s, args) =>
+                            {
+                                Dispatcher.Invoke(() => { RecordingStatusMessage = activeMsg; });
+                                clearTimer.Dispose();
+                            };
+                            clearTimer.Start();
+                        }
+                        else
                         {
                             Input.InputDriver.Instance.MouseMove(e.X, e.Y);
                             InputDriver.Click(e.Button);
@@ -3435,7 +3518,7 @@ namespace OpenRPA
                         }
                         // System.Threading.Thread.Sleep(500);
                     }
-                    if (sender.Name == "Windows") StartRecordPlugins(false);
+                    if (sender.Name == "Windows") StartRecordPlugins();
                 }
                 catch (Exception ex)
                 {
@@ -3464,6 +3547,21 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "OnRecord");
             try
             {
+                // Ensure input hooks are installed
+                if (!InputDriver.Instance.IsInitialized)
+                {
+                    try
+                    {
+                        InputDriver.Instance.Initialize();
+                        Log.Information("OnRecord: InputDriver hooks installed on demand");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning("OnRecord: Failed to install InputDriver hooks: " + ex.Message);
+                    }
+                }
+                // Validate capture mode pipeline
+                if (!ValidateCaptureModePipeline()) return;
                 var designer = (Views.WFDesigner)SelectedContent;
                 designer.ReadOnly = true;
                 designer.Lastinserted = null;
@@ -3471,7 +3569,8 @@ namespace OpenRPA
                 StopDetectorPlugins();
                 InputDriver.Instance.OnKeyDown += OnKeyDown;
                 InputDriver.Instance.OnKeyUp += OnKeyUp;
-                StartRecordPlugins(true);
+                StartRecordPlugins();
+                RecordingStatusMessage = OpenRPA.Resources.strings.ResourceManager.GetString("recording_status_active") ?? "Recording…";
                 InputDriver.Instance.CallNext = false;
                 if (this.Minimize) GenericTools.Minimize();
             }

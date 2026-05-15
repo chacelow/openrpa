@@ -654,6 +654,18 @@
 	<data name="recordingcapturemode_msaa_unavailable" xml:space="preserve">
     <value>当前构建不支持 MSAA 捕获模式。</value>
   </data>
+	<data name="recordingcapturemode_image_unavailable" xml:space="preserve">
+    <value>当前构建不支持图像捕获模式。</value>
+  </data>
+	<data name="recording_status_active" xml:space="preserve">
+    <value>正在录制…</value>
+  </data>
+	<data name="recording_hook_not_installed" xml:space="preserve">
+    <value>无法开始录制：输入钩子未安装。请重启 OpenRPA。</value>
+  </data>
+	<data name="recording_click_not_captured" xml:space="preserve">
+    <value>点击未捕获 — 请尝试其他元素</value>
+  </data>
 	<data name="rename" xml:space="preserve">
     <value>重命名</value>
   </data>

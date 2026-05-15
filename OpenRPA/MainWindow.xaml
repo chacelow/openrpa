@@ -118,8 +118,8 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding recordingCaptureModeLabel}" VerticalAlignment="Center" Margin="0,0,4,0" />
                         <ribbon:RibbonComboBox>
-                            <ribbon:RibbonGallery SelectedItem="{Binding Path=defaultrecordingcapturemode}">
-                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding recordingCaptureModes}" DisplayMemberPath="Name" />
+                            <ribbon:RibbonGallery SelectedValue="{Binding Path=defaultrecordingcapturemodeValue, ElementName=TheMainWindow}" SelectedValuePath="Value">
+                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding recordingCaptureModes, ElementName=TheMainWindow}" DisplayMemberPath="Name" />
                             </ribbon:RibbonGallery>
                         </ribbon:RibbonComboBox>
                     </StackPanel>
@@ -442,6 +442,7 @@
                         </Image.Triggers>
                     </Image>
                 </StatusBarItem>
+                <StatusBarItem x:Name="RecordingStatus" Content="{Binding RecordingStatusMessage}" />
                 <StatusBarItem x:Name="LabelStatusBar" Content="{x:Static or:strings.status_disconnected}" />
                 <StatusBarItem x:Name="LabelStatusBar2" Content="{Binding Path=wsstate}" />
                 <StatusBarItem x:Name="LabelStatusBar3" Content="{Binding Path=wsmsgqueue}" />

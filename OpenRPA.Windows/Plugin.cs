@@ -219,8 +219,21 @@ namespace OpenRPA.Windows
                     WindowsSelector sel = null;
                     // sel = new WindowsSelector(e.Element.rawElement, null, true);
                     sel = new WindowsSelector(element.RawElement as AutomationElement, null, PluginConfig.enum_selector_properties);
-                    if (sel.Count < 2) return;
-                    if (sel == null) return;
+                    if (sel == null || sel.Count < 2)
+                    {
+                        Log.Warning("Windows.Recording::OnMouseUp: Click not captured — insufficient selector depth (Count=" + (sel?.Count ?? 0) + ", Element=" + (element?.Name ?? "null") + ")");
+                        var failEvent = new RecordEvent
+                        {
+                            Button = e.Button,
+                            X = e.X,
+                            Y = e.Y,
+                            UIElement = element,
+                            Element = element,
+                            ClickHandled = true
+                        };
+                        OnUserAction?.Invoke(this, failEvent);
+                        return;
+                    }
                     a.Selector = sel.ToString();
                     a.MaxResults = 1;
                     a.Image = element.ImageString();
@@ -254,7 +267,7 @@ namespace OpenRPA.Windows
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.ToString());
+                    Log.Error("Windows.Recording::OnMouseUp: Failed to capture click — " + ex.ToString());
                 }
             }));
             thread.IsBackground = true;
