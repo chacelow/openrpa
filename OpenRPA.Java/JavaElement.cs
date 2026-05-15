@@ -328,7 +328,7 @@ namespace OpenRPA.Java
             }
         }
         public void Refresh() { }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse, double? ClickRatioX = null, double? ClickRatioY = null)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }
             if (!VirtualClick)

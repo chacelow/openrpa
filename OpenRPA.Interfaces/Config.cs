@@ -54,6 +54,16 @@ namespace OpenRPA
         public bool use_sendkeys { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool use_virtual_click { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool use_animate_mouse { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
+        public RecordingCaptureMode recording_capture_mode
+        {
+            get
+            {
+                var value = GetProperty(null, RecordingCaptureMode.UIA.ToString());
+                if (Enum.TryParse(value, true, out RecordingCaptureMode mode)) return mode;
+                return RecordingCaptureMode.UIA;
+            }
+            set { SetProperty(null, value.ToString()); }
+        }
         public TimeSpan use_postwait { get { return GetProperty(null, TimeSpan.Zero); } set { SetProperty(null, value); } }
         public bool minimize { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool minimize_to_tray { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
@@ -240,6 +250,7 @@ namespace OpenRPA
                 _ = use_sendkeys;
                 _ = use_virtual_click;
                 _ = use_animate_mouse;
+                _ = recording_capture_mode;
                 _ = use_postwait;
                 _ = minimize;
                 _ = minimize_to_tray;

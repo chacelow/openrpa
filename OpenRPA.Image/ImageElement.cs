@@ -66,7 +66,7 @@ namespace OpenRPA.Image
             this.element = Element;
         }
         public void Refresh() { }
-        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
+        public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse, double? ClickRatioX = null, double? ClickRatioY = null)
         {
             if (AnimateMouse)
             {

@@ -3011,6 +3011,33 @@ namespace OpenRPA.Resources {
                 return ResourceManager.GetString("recordingoverlay", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Capture Mode.
+        /// </summary>
+        public static string recordingcapturemode {
+            get {
+                return ResourceManager.GetString("recordingcapturemode", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Image.
+        /// </summary>
+        public static string recordingcapturemode_image {
+            get {
+                return ResourceManager.GetString("recordingcapturemode_image", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MSAA capture mode is not available in this build..
+        /// </summary>
+        public static string recordingcapturemode_msaa_unavailable {
+            get {
+                return ResourceManager.GetString("recordingcapturemode_msaa_unavailable", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Rename.

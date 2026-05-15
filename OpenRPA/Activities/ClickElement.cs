@@ -40,6 +40,8 @@ namespace OpenRPA.Activities
         public InArgument<int> OffsetX { get; set; } = 5;
         [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
         public InArgument<int> OffsetY { get; set; } = 5;
+        public InArgument<double?> ClickRatioX { get; set; }
+        public InArgument<double?> ClickRatioY { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_doubleclick", typeof(Resources.strings)), LocalizedDescription("activity_doubleclick_help", typeof(Resources.strings))]
@@ -77,7 +79,11 @@ namespace OpenRPA.Activities
             foreach (var vk in keys) disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
 
             var _button = (Input.MouseButton)button;
-            el.Click(virtualClick, _button, OffsetX.Get(context), OffsetY.Get(context), doubleclick, animatemouse);
+            double? clickRatioX = null;
+            double? clickRatioY = null;
+            if (ClickRatioX != null) clickRatioX = ClickRatioX.Get(context);
+            if (ClickRatioY != null) clickRatioY = ClickRatioY.Get(context);
+            el.Click(virtualClick, _button, OffsetX.Get(context), OffsetY.Get(context), doubleclick, animatemouse, clickRatioX, clickRatioY);
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait != null) { postwait = PostWait.Get(context); }
             if (postwait != TimeSpan.Zero)

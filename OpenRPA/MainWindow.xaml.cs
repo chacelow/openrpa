@@ -208,8 +208,57 @@ namespace OpenRPA
             public string Name { get; set; }
             public string Value { get; set; }
         }
+        public class capturemode
+        {
+            public capturemode(string Name, RecordingCaptureMode Value)
+            {
+                this.Name = Name;
+                this.Value = Value;
+            }
+            public string Name { get; set; }
+            public RecordingCaptureMode Value { get; set; }
+        }
         // private ObservableCollection<string> _uilocals = null;
         private readonly ObservableCollection<uilocal> _uilocals = new ObservableCollection<uilocal>();
+        private readonly ObservableCollection<capturemode> _recordingCaptureModes = new ObservableCollection<capturemode>();
+        public ObservableCollection<capturemode> recordingCaptureModes
+        {
+            get
+            {
+                if (_recordingCaptureModes.Count == 0)
+                {
+                    _recordingCaptureModes.Add(new capturemode("UIA", RecordingCaptureMode.UIA));
+                    _recordingCaptureModes.Add(new capturemode("MSAA", RecordingCaptureMode.MSAA));
+                    _recordingCaptureModes.Add(new capturemode(OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_image") ?? "Image", RecordingCaptureMode.Image));
+                }
+                return _recordingCaptureModes;
+            }
+            set { }
+        }
+        public string recordingCaptureModeLabel => OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode") ?? "Capture Mode";
+        public string recordingOverlayLabel => OpenRPA.Resources.strings.ResourceManager.GetString("recordingoverlay") ?? "Recording Overlay";
+        public string useSendKeysLabel => OpenRPA.Resources.strings.ResourceManager.GetString("usesendkeys") ?? "Use SendKeys";
+        public string useVirtualClicksLabel => OpenRPA.Resources.strings.ResourceManager.GetString("usevirtualclicks") ?? "Use Virtual Clicks";
+        public string animateMouseLabel => OpenRPA.Resources.strings.ResourceManager.GetString("animatemouse") ?? "Use Animate Mouse";
+        public string recordingAddToDesignerLabel => OpenRPA.Resources.strings.ResourceManager.GetString("main_settings_recording_add_to_designer") ?? "Record directly into designer";
+        public string enableChildSessionsLabel => OpenRPA.Resources.strings.ResourceManager.GetString("main_settings_enable_child_sessions") ?? "Enable Child Sessions";
+        public capturemode defaultrecordingcapturemode
+        {
+            get
+            {
+                var mode = Config.local.recording_capture_mode;
+                return recordingCaptureModes.Where(x => x.Value == mode).FirstOrDefault() ?? recordingCaptureModes.First();
+            }
+            set
+            {
+                if (value != null && value.Value != Config.local.recording_capture_mode)
+                {
+                    Config.local.recording_capture_mode = value.Value;
+                    Config.Save();
+                    NotifyPropertyChanged("defaultrecordingcapturemode");
+                }
+            }
+        }
         public ObservableCollection<uilocal> uilocals
         {
             get
@@ -3229,7 +3278,7 @@ namespace OpenRPA
             if (!Config.local.record_overlay) return;
             foreach (var p in Plugins.recordPlugins.OrderBy(x => x.Priority))
             {
-                if (p.Name != sender.Name)
+                if (p.Name != sender.Name && IsRecordParserAllowed(p))
                 {
                     if (p.ParseMouseMoveAction(ref e)) break;
                 }
@@ -3272,11 +3321,18 @@ namespace OpenRPA
                 IPlugin plugin = sender;
                 try
                 {
+                    if (Config.local.recording_capture_mode == RecordingCaptureMode.MSAA && !Plugins.recordPlugins.Any(x => x.Name == "MSAA"))
+                    {
+                        if (sender.Name == "Windows") StartRecordPlugins(false);
+                        MessageBox.Show(OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_msaa_unavailable") ?? "MSAA capture mode is not available in this build.");
+                        Log.Function("MainWindow", "OnUserAction", "MSAA capture mode is not available");
+                        return;
+                    }
                     if (sender.Name == "Windows")
                     {
                         foreach (var p in Plugins.recordPlugins.OrderBy(x => x.Priority))
                         {
-                            if (p.Name != sender.Name)
+                            if (p.Name != sender.Name && IsRecordParserAllowed(p))
                             {
                                 try
                                 {
@@ -3317,6 +3373,8 @@ namespace OpenRPA
                             },
                             OffsetX = e.OffsetX,
                             OffsetY = e.OffsetY,
+                            ClickRatioX = e.ClickRatioX.HasValue ? new InArgument<double?>(e.ClickRatioX.Value) : null,
+                            ClickRatioY = e.ClickRatioY.HasValue ? new InArgument<double?>(e.ClickRatioY.Value) : null,
                             Button = (int)e.Button,
                             VirtualClick = VirtualClick,
                             AnimateMouse = Config.local.use_animate_mouse
@@ -3387,6 +3445,18 @@ namespace OpenRPA
                 }
             }, null);
             Log.FunctionOutdent("MainWindow", "OnUserAction");
+        }
+        private static bool IsRecordParserAllowed(IRecordPlugin plugin)
+        {
+            switch (Config.local.recording_capture_mode)
+            {
+                case RecordingCaptureMode.Image:
+                    return plugin.Name == "Image";
+                case RecordingCaptureMode.MSAA:
+                    return plugin.Name == "MSAA";
+                default:
+                    return plugin.Name != "Image" && plugin.Name != "MSAA";
+            }
         }
         internal void OnRecord(object _item)
         {

@@ -25,5 +25,7 @@ namespace OpenRPA.Interfaces
         int Y { get; set; }
         int OffsetX { get; set; }
         int OffsetY { get; set; }
+        double? ClickRatioX { get; set; }
+        double? ClickRatioY { get; set; }
     }
 }

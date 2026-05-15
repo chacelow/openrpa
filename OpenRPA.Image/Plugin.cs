@@ -68,17 +68,11 @@ namespace OpenRPA.Image
         private ImageElement lastelement = null;
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
+            if (Config.local.recording_capture_mode != RecordingCaptureMode.Image) return false;
             if (e.UIElement == null) { return false; }
 
             if (!e.Element.Equals(e.UIElement)) { return false; }
             if (e.Process == null) return false;
-            if (e.Process != null)
-            {
-                if (e.Process.ProcessName == "iexplore" || e.Process.ProcessName == "iexplore.exe") { return false; }
-                if (e.Process.ProcessName.ToLower() == "chrome" || e.Process.ProcessName.ToLower() == "firefox") { return false; }
-                if (e.Process.ProcessName.ToLower() == "saplogon") return false;
-            }
-            if (e.UIElement.ControlType != "Pane") { return false; }
             e.Element = lastelement;
             if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
             {
@@ -121,6 +115,7 @@ namespace OpenRPA.Image
         }
         public bool ParseUserAction(ref IRecordEvent e)
         {
+            if (Config.local.recording_capture_mode != RecordingCaptureMode.Image) return false;
             if (e.UIElement == null) return false;
 
             if (!e.Element.Equals(e.UIElement)) { return false; }
@@ -130,13 +125,9 @@ namespace OpenRPA.Image
             {
                 using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
                 {
-                    if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") return false;
-                    if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") return false;
-                    if (p.ProcessName.ToLower() == "saplogon") return false;
                     Processname = p.ProcessName;
                 }
             }
-            if (e.UIElement.ControlType != "Pane") return false;
 
             Input.InputDriver.Instance.MouseMove(e.X - 80, e.Y - 80);
             System.Threading.Thread.Sleep(PluginConfig.recording_mouse_move_time);

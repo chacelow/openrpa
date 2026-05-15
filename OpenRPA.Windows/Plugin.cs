@@ -226,6 +226,11 @@ namespace OpenRPA.Windows
                     a.Image = element.ImageString();
                     re.OffsetX = e.X - element.Rectangle.X;
                     re.OffsetY = e.Y - element.Rectangle.Y;
+                    if (ClickPosition.TryCreateRatios(element.Rectangle, re.OffsetX, re.OffsetY, out var clickRatioX, out var clickRatioY))
+                    {
+                        re.ClickRatioX = clickRatioX;
+                        re.ClickRatioY = clickRatioY;
+                    }
                     re.UIElement = element;
                     re.Element = element;
                     re.Selector = sel;
@@ -570,6 +575,8 @@ namespace OpenRPA.Windows
         public int Y { get; set; }
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
+        public double? ClickRatioX { get; set; }
+        public double? ClickRatioY { get; set; }
         public bool ClickHandled { get; set; }
         public bool SupportVirtualClick { get; set; }
         public MouseButton Button { get; set; }

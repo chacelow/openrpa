@@ -559,6 +559,8 @@ namespace OpenRPA.NM
         public int Y { get; set; }
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
+        public double? ClickRatioX { get; set; }
+        public double? ClickRatioY { get; set; }
         public Input.MouseButton Button { get; set; }
     }
 }

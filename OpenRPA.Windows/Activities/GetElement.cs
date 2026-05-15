@@ -25,6 +25,7 @@ namespace OpenRPA.Windows
         {
             MaxResults = 1;
             MinResults = 1;
+            Timeout = TimeSpan.FromSeconds(3);
         }
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }

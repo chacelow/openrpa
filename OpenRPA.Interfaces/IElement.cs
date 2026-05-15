@@ -14,7 +14,7 @@ namespace OpenRPA.Interfaces
         string Name { get; set; }
         void Focus();
         void Refresh();
-        void Click(bool VirtualClick, OpenRPA.Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse);
+        void Click(bool VirtualClick, OpenRPA.Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse, double? ClickRatioX = null, double? ClickRatioY = null);
         Task Highlight(bool Blocking, System.Drawing.Color Color, TimeSpan Duration);
         string ImageString();
         IElement[] Items { get; }

@@ -116,6 +116,14 @@
                                   Command="{Binding Data.RecordCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                     <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding recordingCaptureModeLabel}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                        <ribbon:RibbonComboBox>
+                            <ribbon:RibbonGallery SelectedItem="{Binding Path=defaultrecordingcapturemode}">
+                                <ribbon:RibbonGalleryCategory ItemsSource="{Binding recordingCaptureModes}" DisplayMemberPath="Name" />
+                            </ribbon:RibbonGallery>
+                        </ribbon:RibbonComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding VisualTracking}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
                         <TextBlock Text="{x:Static or:strings.visualtracking}"></TextBlock>
@@ -216,32 +224,32 @@
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_record_overlay}" Command="{Binding Data.VisualTrackingCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.recordingoverlay}"></TextBlock>
+                        <TextBlock Text="{Binding recordingOverlayLabel}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_use_sendkeys}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.usesendkeys}"></TextBlock>
+                        <TextBlock Text="{Binding useSendKeysLabel}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_use_virtual_click}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.usevirtualclicks}"></TextBlock>
+                        <TextBlock Text="{Binding useVirtualClicksLabel}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_use_animate_mouse}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.animatemouse}"></TextBlock>
+                        <TextBlock Text="{Binding animateMouseLabel}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <RibbonCheckBox IsChecked="{Binding Setting_recording_add_to_designer}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.main_settings_recording_add_to_designer}"></TextBlock>
+                        <TextBlock Text="{Binding recordingAddToDesignerLabel}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" >
                         <RibbonCheckBox IsChecked="{Binding Setting_IsChildSessionsEnabled}" Command="{Binding Data.ChildSessionCommand, Source={StaticResource proxy}}" 
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
-                        <TextBlock Text="{x:Static or:strings.main_settings_enable_child_sessions}"></TextBlock>
+                        <TextBlock Text="{Binding enableChildSessionsLabel}"></TextBlock>
                     </StackPanel>
                     <!--<StackPanel Orientation="Horizontal">
                         <RibbonTextBox Text="{Binding Setting_use_postwait}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}"  />

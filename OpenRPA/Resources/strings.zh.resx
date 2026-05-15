@@ -645,6 +645,15 @@
 	<data name="recordingoverlay" xml:space="preserve">
     <value>录制覆盖</value>
   </data>
+	<data name="recordingcapturemode" xml:space="preserve">
+    <value>捕获模式</value>
+  </data>
+	<data name="recordingcapturemode_image" xml:space="preserve">
+    <value>图像</value>
+  </data>
+	<data name="recordingcapturemode_msaa_unavailable" xml:space="preserve">
+    <value>当前构建不支持 MSAA 捕获模式。</value>
+  </data>
 	<data name="rename" xml:space="preserve">
     <value>重命名</value>
   </data>
