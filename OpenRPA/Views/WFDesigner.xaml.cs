@@ -46,7 +46,7 @@ namespace OpenRPA.Views
         public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
         private string SelectedVariableName = null;
         private Selection selection = null;
-        // private readonly MenuItem runthis;
+        private readonly MenuItem runthis;
         // private readonly MenuItem runFromHere;
         private readonly MenuItem comment;
         private readonly MenuItem uncomment;
@@ -292,11 +292,11 @@ namespace OpenRPA.Views
 
             comment = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_commentout };
             uncomment = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_uncomment };
-            //runthis = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runthis };
+            runthis = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runthis };
             // runFromHere = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runfromhere };
             comment.Click += OnComment;
             uncomment.Click += OnUncomment;
-            // runthis.Click += OnRunthis;
+            runthis.Click += OnRunthis;
             // runFromHere.Click += OnRunFromHere;
 
             WorkflowDesigner = new WorkflowDesigner();
@@ -361,10 +361,8 @@ namespace OpenRPA.Views
             if (modelService == null) return;
             modelService.ModelChanged -= new EventHandler<ModelChangedEventArgs>(ModelChanged);
             modelService.ModelChanged += new EventHandler<ModelChangedEventArgs>(ModelChanged);
-#if DEBUG
-            //WorkflowDesigner.ContextMenu.Items.Add(runthis);
+            WorkflowDesigner.ContextMenu.Items.Add(runthis);
             //WorkflowDesigner.ContextMenu.Items.Add(runFromHere);
-#endif
             WorkflowDesigner.ContextMenu.Items.Add(comment);
             try
             {
@@ -1834,6 +1832,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     }
                 }
             }
+        }
+        private void OnRunthis(object sender, RoutedEventArgs e)
+        {
+            Singlestep = true;
+            Run(VisualTracking, SlowMotion, null);
         }
         //private void OnRunthis(object sender, RoutedEventArgs e)
         //{
