@@ -37,51 +37,49 @@ namespace OpenRPA.Views
         public static DynamicActivityGenerator dag;
         public void InitializeSnippets()
         {
-            if (toolbox.Categories.Count > 0) return;
             try
             {
                 if(dag == null)
-                {
-                    // dag = new DynamicActivityGenerator("Snippets", Interfaces.Extensions.ProjectsDirectory);
                     dag = new DynamicActivityGenerator("Snippets", System.IO.Path.GetTempPath());
-                }
+
                 var cs = new Dictionary<string, ToolboxCategory>();
+
+                // Built-in snippet plugins
                 foreach(var s in Plugins.Snippets)
                 {
                     try
                     {
                         if (!cs.ContainsKey(s.Category)) cs.Add(s.Category, new ToolboxCategory(s.Category));
-                        ToolboxCategory cat = cs[s.Category];
                         var t = dag.AppendSubWorkflowTemplate(s.Name, s.Xaml);
-                        cat.Add(new ToolboxItemWrapper(t, s.Name));
+                        cs[s.Category].Add(new ToolboxItemWrapper(t, s.Name));
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) { Log.Error(ex.ToString()); }
+                }
+
+                // User projects as categories
+                foreach (var project in RobotInstance.instance.Projects)
+                {
+                    if (!cs.ContainsKey(project.name))
+                        cs.Add(project.name, new ToolboxCategory(project.name));
+                    foreach (var wf in project.Workflows)
                     {
-                        Log.Error(ex.ToString());
+                        try
+                        {
+                            if (string.IsNullOrEmpty(wf.Xaml)) continue;
+                            var t = dag.AppendSubWorkflowTemplate(project.name + "_" + wf.name, wf.Xaml);
+                            cs[project.name].Add(new ToolboxItemWrapper(t, wf.name));
+                        }
+                        catch (Exception ex) { Log.Error(ex.ToString()); }
                     }
                 }
-                try
-                {
-                    dag.Save();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-                if (cs == null || cs.Count == 0)
-                {
-                    Log.Warning("No snippets!");
-                }
+
+                try { dag.Save(); } catch (Exception ex) { Log.Error(ex.ToString()); }
+
+                // Add new categories (don't remove existing)
                 foreach (var c in cs)
                 {
-                    try
-                    {
+                    if (!toolbox.Categories.Any(x => x.CategoryName == c.Key))
                         toolbox.Categories.Add(c.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
                 }
             }
             catch (Exception ex)
