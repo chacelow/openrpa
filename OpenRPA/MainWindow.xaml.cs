@@ -59,10 +59,6 @@ namespace OpenRPA
             }
             SetStatus("Initializing events");
             DataContext = this;
-            // Eagerly populate capture modes so RibbonGallery binding resolves before UI renders
-            _recordingCaptureModes.Add(new capturemode("UIA", RecordingCaptureMode.UIA));
-            _recordingCaptureModes.Add(new capturemode("MSAA", RecordingCaptureMode.MSAA));
-            _recordingCaptureModes.Add(new capturemode(OpenRPA.Resources.strings.ResourceManager.GetString("recordingcapturemode_image") ?? "Image", RecordingCaptureMode.Image));
             System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             AppDomain currentDomain = AppDomain.CurrentDomain;

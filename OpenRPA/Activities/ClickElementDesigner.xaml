@@ -4,6 +4,7 @@
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
     xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:or="clr-namespace:OpenRPA.Resources"
     >
 
 
@@ -26,6 +27,13 @@
         <DataTemplate x:Key="Collapsed">
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <Button Click="Highlight_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static or:strings.activity_highlight}"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </DataTemplate>
         <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
             <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
