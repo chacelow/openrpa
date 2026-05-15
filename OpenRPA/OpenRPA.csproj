@@ -225,6 +225,7 @@
 		<None Remove="Views\selectUserWindow.xaml" />
 		<None Remove="Views\showVariables.xaml" />
 		<None Remove="Views\Snippets.xaml" />
+		<None Remove="Views\WelcomeWindow.xaml" />
 		<None Remove="Views\WFDesigner.xaml" />
 		<None Remove="Views\wfToolbox.xaml" />
 		<None Remove="Views\WorkflowInstances.xaml" />
@@ -463,6 +464,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\showVariables.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\WelcomeWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\WFDesigner.xaml">

@@ -1009,6 +1009,42 @@ namespace OpenRPA
             Config.Save();
             SetStatus("Checking for updates");
             _ = CheckForUpdatesAsync();
+
+            // Show welcome wizard on first run (skip in agent/unattended mode or when upgrading from older version)
+            if (Config.local.firstrun && !Config.settingsFileExistedAtStartup && !Config.local.isagent)
+            {
+                bool? wizardResult = null;
+                GenericTools.RunUI(() =>
+                {
+                    try
+                    {
+                        var welcomeWindow = new Views.WelcomeWindow();
+                        var result = welcomeWindow.ShowDialog();
+                        wizardResult = (result == true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("WelcomeWindow: " + ex.ToString());
+                    }
+                }, 30000);
+
+                // Wait for wizard to complete (max 60 seconds)
+                var waited = 0;
+                while (wizardResult == null && waited < 60)
+                {
+                    await Task.Delay(500);
+                    waited++;
+                }
+
+                // If wizard was closed without choosing (ESC/X), default to local mode
+                if (wizardResult == null || wizardResult == false)
+                {
+                    Config.local.wsurl = "";
+                    Config.local.firstrun = false;
+                    Config.Save();
+                }
+            }
+
             try
             {
                 if (!string.IsNullOrEmpty(Config.local.wsurl))
@@ -1228,15 +1264,12 @@ namespace OpenRPA
 
                                 var client = new System.Net.Http.HttpClient();
                                 var result = await client.PostAsync(url + "/AddTokenRequest", content);
+                                var loginUrl = url + "/Login?key=" + key;
                                 GenericTools.RunUI(() =>
                                 {
-                                    Hide();
-                                    pendingwin = new Views.PendingToken();
+                                    pendingwin = new Views.PendingToken(loginUrl);
                                     pendingwin.Show();
                                 }, 10000);
-
-
-                                GenericTools.OpenUrl(url + "/Login?key=" + key);
                                 while (string.IsNullOrEmpty(jwt))
                                 {
                                     try
@@ -1275,6 +1308,11 @@ namespace OpenRPA
                                     {
                                         if (pendingwin == null || pendingwin.result == false)
                                         {
+                                            if (pendingwin != null && pendingwin.dontremind)
+                                            {
+                                                Config.local.noweblogin = true;
+                                                Config.Save();
+                                            }
                                             try
                                             {
                                                 Close();
@@ -1293,9 +1331,17 @@ namespace OpenRPA
                             }
                             finally
                             {
-                                if (!string.IsNullOrEmpty(jwt)) Show();
-                                if (string.IsNullOrEmpty(jwt))
-                                {   
+                                if (!string.IsNullOrEmpty(jwt))
+                                {
+                                    Show();
+                                }
+                                else
+                                {
+                                    if (pendingwin != null && pendingwin.dontremind)
+                                    {
+                                        Config.local.noweblogin = true;
+                                        Config.Save();
+                                    }
                                     if (global.webSocketClient != null && global.webSocketClient.isConnected) Show();
                                 }
                                 GenericTools.RunUI(() =>

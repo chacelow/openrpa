@@ -30,6 +30,7 @@ namespace OpenRPA
         // public string[] openworkflows { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public string[] files_pending_deletion { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public bool restore_dependencies_on_startup { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
+        public bool firstrun { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public System.Drawing.Rectangle mainwindow_position { get { return GetProperty(null, System.Drawing.Rectangle.Empty); } set { SetProperty(null, value); } }
         public string designerlayout { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool record_overlay { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
@@ -170,6 +171,7 @@ namespace OpenRPA
                 return filename;
             }
         }
+        public static bool settingsFileExistedAtStartup = false;
         public static Config local
         {
             get
@@ -182,6 +184,7 @@ namespace OpenRPA
                         _local = new Config();
                         if (System.IO.File.Exists(filename))
                         {
+                            settingsFileExistedAtStartup = true;
                             var json = System.IO.File.ReadAllText(filename);
                             _local.settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
                         }
@@ -226,6 +229,7 @@ namespace OpenRPA
                 _ = culture;
                 _ = ocrlanguage;
                 _ = restore_dependencies_on_startup;
+                _ = firstrun;
                 //_ = openworkflows;
                 _ = mainwindow_position;
                 _ = designerlayout;
