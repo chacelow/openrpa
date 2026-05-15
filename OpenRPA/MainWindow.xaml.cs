@@ -3446,8 +3446,6 @@ namespace OpenRPA
                     if (SelectedContent is Views.WFDesigner view)
                     {
 
-                        var VirtualClick = Config.local.use_virtual_click;
-                        if (!e.SupportVirtualClick) VirtualClick = false;
                         e.a.AddActivity(new Activities.ClickElement
                         {
                             Element = new System.Activities.InArgument<IElement>()
@@ -3459,7 +3457,8 @@ namespace OpenRPA
                             ClickRatioX = e.ClickRatioX.HasValue ? new InArgument<double?>(e.ClickRatioX.Value) : null,
                             ClickRatioY = e.ClickRatioY.HasValue ? new InArgument<double?>(e.ClickRatioY.Value) : null,
                             Button = (int)e.Button,
-                            VirtualClick = VirtualClick,
+                            Focus = true,
+                            VirtualClick = false,
                             AnimateMouse = Config.local.use_animate_mouse
                         }, "item");
                         if (e.SupportSelect)
