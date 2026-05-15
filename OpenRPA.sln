@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32112.339
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11806.211 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Windows", "OpenRPA.Windows\OpenRPA.Windows.csproj", "{22575D87-A99D-4706-B022-C7E575314A94}"
 EndProject
@@ -397,7 +397,6 @@ Global
 		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.All|x86.ActiveCfg = Release|Any CPU
 		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.All|x86.Build.0 = Release|Any CPU
 		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.Debug|x86.ActiveCfg = Debug|x86
 		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.Debug|x86.Build.0 = Debug|x86
 		{0657F8E2-F7B5-4CB0-AE79-39E87136967F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -409,7 +408,6 @@ Global
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.All|x86.ActiveCfg = Release|Any CPU
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.All|x86.Build.0 = Release|Any CPU
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.Debug|x86.ActiveCfg = Debug|x86
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.Debug|x86.Build.0 = Debug|x86
 		{B1FECE6D-BCD8-4554-BC40-9ADCCD2B8B43}.Release|Any CPU.ActiveCfg = Release|x86
@@ -586,7 +584,7 @@ Global
 		{4B4CD933-BF62-4F92-B8FA-6771758C5197} = {86A0EDE3-9272-4CA5-A499-F2E1190A80EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 	EndGlobalSection
 EndGlobal
