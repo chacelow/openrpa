@@ -1,0 +1,645 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!--<CefSharpTargetDir>cef</CefSharpTargetDir>-->
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
+    <StartupObject />
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
+    <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+    <Version>1.4.57.13</Version>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <PackageIcon>openrpa.png</PackageIcon>
+    <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+    <PackageTags>
+    </PackageTags>
+    <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+    <Platforms>AnyCPU;x86</Platforms>
+    <Authors>Allan Zimmermann</Authors>
+    <Company>OpenIAP</Company>
+    <UserSecretsId>67d03aca-cfb1-4f1c-9efa-111ce7476743</UserSecretsId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\debug</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>..\debug86</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\dist</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <OutputPath>..\dist</OutputPath>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+    <OutputPath>
+    </OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
+    <OutputPath />
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);config=$(Configuration)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);version=$(PackageVersion)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);author=$(Authors)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);configurationname=$(ConfigurationName)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <!-- https://tyrrrz.me/blog/additional-nuget-files-in-new-csproj -->
+    <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
+    <None Include="Resources\openrpa.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fluent.Ribbon" Version="9.0.4" />
+    <PackageReference Include="HandyControl" Version="3.3.0" />
+    <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="NuGet.Common" Version="5.11.6" />
+    <PackageReference Include="NuGet.Packaging" Version="5.11.6" />
+    <PackageReference Include="NuGet.Protocol" Version="5.11.3" />
+    <PackageReference Include="NuGet.Resolver" Version="5.11.3" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Activities\AddWorkitemDesigner.xaml" />
+    <None Remove="Activities\BreakableDoWhileDesigner.xaml" />
+    <None Remove="Activities\BreakableWhileDesigner.xaml" />
+    <None Remove="Activities\BreakDesigner.xaml" />
+    <None Remove="Activities\ClickElementDesigner.xaml" />
+    <None Remove="Activities\CloseApplicationDesigner.xaml" />
+    <None Remove="Activities\CommentOutDesigner.xaml" />
+    <None Remove="Activities\ContinueDesigner.xaml" />
+    <None Remove="Activities\CopyClipboardDesigner.xaml" />
+    <None Remove="Activities\DeleteWorkitemDesigner.xaml" />
+    <None Remove="Activities\DetectorDesigner.xaml" />
+    <None Remove="Activities\FocusElementDesigner.xaml" />
+    <None Remove="Activities\ForEachDataRowDesigner.xaml" />
+    <None Remove="Activities\ForEachOfDesigner.xaml" />
+    <None Remove="Activities\GetWorkflowInstanceDesigner.xaml" />
+    <None Remove="Activities\HighlightElementDesigner.xaml" />
+    <None Remove="Activities\InsertClipboardDesigner.xaml" />
+    <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
+    <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
+    <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
+    <None Remove="Activities\MoveElementDesigner.xaml" />
+    <None Remove="Activities\MoveMouseDesigner.xaml" />
+    <None Remove="Activities\OpenApplicationDesigner.xaml" />
+    <None Remove="Activities\PopWorkitemDesigner.xaml" />
+    <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
+    <None Remove="Activities\StopOpenRPADesigner.xaml" />
+    <None Remove="Activities\TypeTextDesigner.xaml" />
+    <None Remove="Activities\UpdateWorkitemDesigner.xaml" />
+    <None Remove="Activities\Workitems\BulkAddWorkitemsDesigner.xaml" />
+    <None Remove="Activities\Workitems\ThrowBusinessRuleExceptionDesigner.xaml" />
+    <None Remove="AgentWindow.xaml" />
+    <None Remove="App.xaml" />
+    <None Remove="Images\PinDocMenu_Black.png" />
+    <None Remove="MainWindow.xaml" />
+    <None Remove="Resources\Buttons\Button.png" />
+    <None Remove="Resources\Buttons\Copy.png" />
+    <None Remove="Resources\Buttons\Delete.png" />
+    <None Remove="Resources\Buttons\Exit.png" />
+    <None Remove="Resources\Buttons\Export.png" />
+    <None Remove="Resources\Buttons\Import.png" />
+    <None Remove="Resources\Buttons\New.png" />
+    <None Remove="Resources\Buttons\Open.png" />
+    <None Remove="Resources\Buttons\OpenChrome.png" />
+    <None Remove="Resources\Buttons\OpenEdge.png" />
+    <None Remove="Resources\Buttons\OpenFirefox.png" />
+    <None Remove="Resources\Buttons\Permissions.png" />
+    <None Remove="Resources\Buttons\picture_in_picture.png" />
+    <None Remove="Resources\Buttons\Play.png" />
+    <None Remove="Resources\Buttons\Record.png" />
+    <None Remove="Resources\Buttons\Reload.png" />
+    <None Remove="Resources\Buttons\Revert.png" />
+    <None Remove="Resources\Buttons\Save.png" />
+    <None Remove="Resources\Buttons\Signout.png" />
+    <None Remove="Resources\Buttons\Stop.png" />
+    <None Remove="Resources\Buttons\swap.png" />
+    <None Remove="Resources\close.png" />
+    <None Remove="Resources\designer\addworkitem.png" />
+    <None Remove="Resources\designer\break.png" />
+    <None Remove="Resources\designer\bulkaddworkitems.png" />
+    <None Remove="Resources\designer\closeapplication.png" />
+    <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\continue.png" />
+    <None Remove="Resources\designer\copyclipboard.png" />
+    <None Remove="Resources\designer\deleteworkitem.png" />
+    <None Remove="Resources\designer\detector.png" />
+    <None Remove="Resources\designer\dowhile.png" />
+    <None Remove="Resources\designer\elementclick.png" />
+    <None Remove="Resources\designer\focuselement.png" />
+    <None Remove="Resources\designer\foreach.png" />
+    <None Remove="Resources\designer\getworkflowinstance.png" />
+    <None Remove="Resources\designer\highlightelement.png" />
+    <None Remove="Resources\designer\insertclipboard.png" />
+    <None Remove="Resources\designer\invokeopenflow.png" />
+    <None Remove="Resources\designer\invokeremoterpaworkflow.png" />
+    <None Remove="Resources\designer\invokerpaworkflow.png" />
+    <None Remove="Resources\designer\mouse.png" />
+    <None Remove="Resources\designer\moveelement.png" />
+    <None Remove="Resources\designer\openapplication.png" />
+    <None Remove="Resources\designer\popworkitem.png" />
+    <None Remove="Resources\designer\showballontip.png" />
+    <None Remove="Resources\designer\stopopnerpa.png" />
+    <None Remove="Resources\designer\throwbusinessruleexception.png" />
+    <None Remove="Resources\designer\typetext.png" />
+    <None Remove="Resources\designer\updateworkitem.png" />
+    <None Remove="Resources\designer\while.png" />
+    <None Remove="Resources\icons\activity.png" />
+    <None Remove="Resources\icons\flowchart.png" />
+    <None Remove="Resources\icons\openin.png" />
+    <None Remove="Resources\icons\property.png" />
+    <None Remove="Resources\icons\spinner2.png" />
+    <None Remove="Resources\icons\variable.png" />
+    <None Remove="Resources\loadingbackground.jpg" />
+    <None Remove="Resources\open.png" />
+    <None Remove="Resources\open_rpa.ico" />
+    <None Remove="Resources\open_rpa_white.png" />
+    <None Remove="Resources\snippet.png" />
+    <None Remove="Resources\state\Abort.png" />
+    <None Remove="Resources\state\Completed.png" />
+    <None Remove="Resources\state\failed.png" />
+    <None Remove="Resources\state\risk.png" />
+    <None Remove="Resources\state\Running.png" />
+    <None Remove="Resources\state\Running_green.png" />
+    <None Remove="Resources\state\sensor.png" />
+    <None Remove="Resources\state\unloaded.png" />
+    <None Remove="Resources\state\workitemqueue.png" />
+    <None Remove="Resources\toolbox\addworkitem.png" />
+    <None Remove="Resources\toolbox\break.png" />
+    <None Remove="Resources\toolbox\bulkaddworkitems.png" />
+    <None Remove="Resources\toolbox\closeapplication.png" />
+    <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\continue.png" />
+    <None Remove="Resources\toolbox\copyclipboard.png" />
+    <None Remove="Resources\toolbox\deleteworkitem.png" />
+    <None Remove="Resources\toolbox\detector.png" />
+    <None Remove="Resources\toolbox\dowhile.png" />
+    <None Remove="Resources\toolbox\elementclick.png" />
+    <None Remove="Resources\toolbox\focuselement.png" />
+    <None Remove="Resources\toolbox\foreach.png" />
+    <None Remove="Resources\toolbox\getworkflowinstance.png" />
+    <None Remove="Resources\toolbox\highlightelement.png" />
+    <None Remove="Resources\toolbox\insertclipboard.png" />
+    <None Remove="Resources\toolbox\invokeopenflow.png" />
+    <None Remove="Resources\toolbox\invokeremoterpaworkflow.png" />
+    <None Remove="Resources\toolbox\invokerpaworkflow.png" />
+    <None Remove="Resources\toolbox\mouse.png" />
+    <None Remove="Resources\toolbox\moveelement.png" />
+    <None Remove="Resources\toolbox\openapplication.png" />
+    <None Remove="Resources\toolbox\popworkitem.png" />
+    <None Remove="Resources\toolbox\showballontip.png" />
+    <None Remove="Resources\toolbox\stopopnerpa.png" />
+    <None Remove="Resources\toolbox\throwbusinessruleexception.png" />
+    <None Remove="Resources\toolbox\typetext.png" />
+    <None Remove="Resources\toolbox\updateworkitem.png" />
+    <None Remove="Resources\toolbox\while.png" />
+    <None Remove="Views\AgentViewProjects.xaml" />
+    <None Remove="Views\ChildSession.xaml" />
+    <None Remove="Views\CloseableHeader.xaml" />
+    <None Remove="Views\DetectorsView.xaml" />
+    <None Remove="Views\EditXAML.xaml" />
+    <None Remove="Views\InsertSelect.xaml" />
+    <None Remove="Views\InsertText.xaml" />
+    <None Remove="Views\KeyboardSeqWindow.xaml" />
+    <None Remove="Views\OpenProject.xaml" />
+    <None Remove="Views\PackageManager.xaml" />
+    <None Remove="Views\PendingToken.xaml" />
+    <None Remove="Views\PermissionsWindow.xaml" />
+    <None Remove="Views\RecorderPlugins.xaml" />
+    <None Remove="Views\RunPlugins.xaml" />
+    <None Remove="Views\selectUserWindow.xaml" />
+    <None Remove="Views\showVariables.xaml" />
+    <None Remove="Views\Snippets.xaml" />
+    <None Remove="Views\WelcomeWindow.xaml" />
+    <None Remove="Views\WFDesigner.xaml" />
+    <None Remove="Views\wfToolbox.xaml" />
+    <None Remove="Views\WorkflowInstances.xaml" />
+    <None Remove="Views\WorkitemQueue.xaml" />
+    <None Remove="Views\WorkItemQueuesView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\addworkitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\bulkaddworkitems.png" />
+    <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\copyclipboard.png" />
+    <EmbeddedResource Include="Resources\toolbox\deleteworkitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\detector.png" />
+    <EmbeddedResource Include="Resources\toolbox\dowhile.png" />
+    <EmbeddedResource Include="Resources\toolbox\elementclick.png" />
+    <EmbeddedResource Include="Resources\toolbox\focuselement.png" />
+    <EmbeddedResource Include="Resources\toolbox\foreach.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokeremoterpaworkflow.png" />
+    <EmbeddedResource Include="Resources\toolbox\openapplication.png" />
+    <EmbeddedResource Include="Resources\toolbox\getworkflowinstance.png" />
+    <EmbeddedResource Include="Resources\toolbox\highlightelement.png" />
+    <EmbeddedResource Include="Resources\toolbox\insertclipboard.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokerpaworkflow.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokeopenflow.png" />
+    <EmbeddedResource Include="Resources\toolbox\closeapplication.png" />
+    <EmbeddedResource Include="Resources\toolbox\moveelement.png" />
+    <EmbeddedResource Include="Resources\toolbox\popworkitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\showballontip.png" />
+    <EmbeddedResource Include="Resources\toolbox\stopopnerpa.png" />
+    <EmbeddedResource Include="Resources\toolbox\throwbusinessruleexception.png" />
+    <EmbeddedResource Include="Resources\toolbox\typetext.png" />
+    <EmbeddedResource Include="Resources\toolbox\updateworkitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\while.png" />
+    <EmbeddedResource Include="Resources\snippet.png" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
+    <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
+      <IncludeAssets>all</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Windows\OpenRPA.Windows.csproj">
+      <IncludeAssets>all</IncludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\continue.png" />
+    <EmbeddedResource Include="Resources\toolbox\break.png" />
+    <EmbeddedResource Include="Resources\toolbox\mouse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Activities\StopOpenRPADesigner.xaml.cs">
+      <Generator>
+      </Generator>
+    </Compile>
+    <Compile Update="Resources\strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\RecorderPlugins.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\WorkflowInstances.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.ru.resx">
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.ro.resx">
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.da.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Microsoft.Expression.Interactions.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="System.Windows.Interactivity.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source nuget.org" />
+  </Target>
+  <!--<Target Name="PushNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'ReleaseNuget'">
+    <Exec Command="ECHO ON&#xD;&#xA;nuget.exe push -Source &quot;nuget.org&quot; $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" />
+  </Target>-->
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
+    <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.None" BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="ECHO ON&#xD;&#xA;dir" />
+  </Target>-->
+  <ItemGroup>
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Accessibility.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA\lib\AxInterop.MSTSCLib.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\controlzex\5.0.1\lib\net462\ControlzEx.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\dotnetprojects.wpf.toolkit\5.0.43\lib\net40\DotNetProjects.DataVisualization.Toolkit.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\dotnetprojects.wpf.toolkit\5.0.43\lib\net40\DotNetProjects.Input.Toolkit.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\dotnetprojects.wpf.toolkit\5.0.43\lib\net40\DotNetProjects.Layout.Toolkit.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\dotnetprojects.wpf.toolkit\5.0.43\lib\net40\DotNetProjects.WPF.Themes.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\flaui.core\3.2.0\lib\net45\FlaUI.Core.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\flaui.uia3\3.2.0\lib\net45\FlaUI.UIA3.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\fluent.ribbon\9.0.4\lib\net462\Fluent.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\grpc.core.api\2.44.0\lib\net45\Grpc.Core.Api.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\grpc.core\2.44.0\lib\net45\Grpc.Core.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\handycontrol\3.3.0\lib\net48\HandyControl.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\avalonedit\6.1.3.50\lib\net45\ICSharpCode.AvalonEdit.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\interop.uiautomationclient\10.18362.0\lib\net45\Interop.UIAutomationClient.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\messagepack.annotations\2.1.152\lib\netstandard2.0\MessagePack.Annotations.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\messagepack\2.1.152\lib\netstandard2.0\MessagePack.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.bcl.asyncinterfaces\9.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.bcl.hashcode\1.1.1\ref\net461\Microsoft.Bcl.HashCode.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.analyzerutilities\3.3.0\lib\netstandard2.0\Microsoft.CodeAnalysis.AnalyzerUtilities.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.csharp\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.csharp.features\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Features.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.csharp.workspaces\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.common\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.features\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.Features.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.scripting.common\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.Scripting.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.visualbasic\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.visualbasic.features\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.VisualBasic.Features.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.visualbasic.workspaces\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.codeanalysis.workspaces.common\4.0.1\lib\netstandard2.0\Microsoft.CodeAnalysis.Workspaces.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.diasymreader\1.3.0\lib\net20\Microsoft.DiaSymReader.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.configuration.abstractions\9.0.0\lib\net462\Microsoft.Extensions.Configuration.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.configuration.binder\9.0.0\lib\net462\Microsoft.Extensions.Configuration.Binder.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.configuration\9.0.0\lib\net462\Microsoft.Extensions.Configuration.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\9.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.dependencyinjection\9.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.diagnostics.abstractions\9.0.0\lib\net462\Microsoft.Extensions.Diagnostics.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.logging.abstractions\9.0.0\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.logging.configuration\9.0.0\lib\net462\Microsoft.Extensions.Logging.Configuration.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.logging\9.0.0\lib\net462\Microsoft.Extensions.Logging.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.options.configurationextensions\9.0.0\lib\net462\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.options\9.0.0\lib\net462\Microsoft.Extensions.Options.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.extensions.primitives\9.0.0\lib\net462\Microsoft.Extensions.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Microsoft.VisualBasic.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.visualstudio.debugger.contracts\17.2.0\lib\netstandard2.0\Microsoft.VisualStudio.Debugger.Contracts.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\microsoft.xaml.behaviors.wpf\1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\mscorlib.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA\lib\MSTSCLib.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\newtonsoft.json\13.0.2\lib\net45\Newtonsoft.Json.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nlog\4.7.13\lib\net45\NLog.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.common\5.11.6\lib\net472\NuGet.Common.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.configuration\5.11.6\lib\net472\NuGet.Configuration.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.frameworks\5.11.6\lib\net472\NuGet.Frameworks.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.packaging\5.11.6\lib\net472\NuGet.Packaging.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.protocol\5.11.3\lib\net472\NuGet.Protocol.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.resolver\5.11.3\lib\net472\NuGet.Resolver.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\nuget.versioning\5.11.6\lib\net472\NuGet.Versioning.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA.CodeEditor\bin\Debug\net48\OpenRPA.CodeEditor.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA.Interfaces\bin\Debug\net48\OpenRPA.Interfaces.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA.NamedPipeWrapper\bin\Debug\net48\OpenRPA.NamedPipeWrapper.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA.Net\bin\Debug\net48\OpenRPA.Net.dll" />
+    <ReferencePath Include="D:\projects\openrpa\OpenRPA.Windows\bin\Debug\net48\OpenRPA.Windows.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\opentelemetry.api\1.11.1\lib\net462\OpenTelemetry.Api.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\opentelemetry.api.providerbuilderextensions\1.11.1\lib\net462\OpenTelemetry.Api.ProviderBuilderExtensions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\opentelemetry\1.11.1\lib\net462\OpenTelemetry.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\opentelemetry.exporter.opentelemetryprotocol\1.11.1\lib\net462\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Activities.Core.Presentation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Activities.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Activities.DurableInstancing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Activities.Presentation.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.buffers\4.5.1\ref\net45\System.Buffers.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.collections.immutable\5.0.0\lib\net461\System.Collections.Immutable.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.ComponentModel.DataAnnotations.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.composition.attributedmodel\1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.composition.convention\1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.composition.hosting\1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.composition.runtime\1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.composition.typedparts\1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Configuration.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.diagnostics.diagnosticsource\9.0.0\lib\net462\System.Diagnostics.DiagnosticSource.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Drawing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.IdentityModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.IO.Compression.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.IO.Compression.FileSystem.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.io.pipelines\5.0.1\lib\net461\System.IO.Pipelines.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Management.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.memory\4.5.5\lib\net461\System.Memory.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.WebRequest.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Numerics.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.numerics.vectors\4.5.0\ref\net46\System.Numerics.Vectors.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.reflection.metadata\5.0.0\lib\net461\System.Reflection.Metadata.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.runtime.compilerservices.unsafe\6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Runtime.DurableInstancing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Runtime.Remoting.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Runtime.Serialization.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Security.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.ServiceModel.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.text.encoding.codepages\4.5.1\lib\net461\System.Text.Encoding.CodePages.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.threading.tasks.extensions\4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Transactions.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\system.valuetuple\4.5.0\ref\net47\System.ValueTuple.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Web.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Web.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Controls.Ribbon.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\UIAutomationClient.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\UIAutomationProvider.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\UIAutomationTypes.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\WindowsBase.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\WindowsFormsIntegration.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\extended.wpf.toolkit\4.2.0\lib\net40\Xceed.Wpf.AvalonDock.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\extended.wpf.toolkit\4.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\extended.wpf.toolkit\4.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\extended.wpf.toolkit\4.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
+    <ReferencePath Include="C:\Users\11038\.nuget\packages\extended.wpf.toolkit\4.2.0\lib\net40\Xceed.Wpf.Toolkit.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\Microsoft.Win32.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\netstandard.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.AppContext.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.Concurrent.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.NonGeneric.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.Specialized.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.Annotations.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.EventBasedAsync.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.TypeConverter.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Console.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Data.Common.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Contracts.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Debug.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.FileVersionInfo.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Process.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.StackTrace.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.TextWriterTraceListener.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Tools.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.TraceSource.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Drawing.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Dynamic.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Globalization.Calendars.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Globalization.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Globalization.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.Compression.ZipFile.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.DriveInfo.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.Watcher.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.IsolatedStorage.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.MemoryMappedFiles.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.Pipes.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.UnmanagedMemoryStream.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.Expressions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.Queryable.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Http.Rtc.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.NameResolution.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.NetworkInformation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Ping.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Requests.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Security.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Sockets.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.WebHeaderCollection.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.WebSockets.Client.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.WebSockets.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ObjectModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Emit.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Emit.ILGeneration.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Emit.Lightweight.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Resources.Reader.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Resources.ResourceManager.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Resources.Writer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.CompilerServices.VisualC.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Handles.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.InteropServices.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Numerics.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Formatters.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Json.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Claims.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Algorithms.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Csp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.X509Certificates.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Principal.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.SecureString.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Duplex.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.NetTcp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Security.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Text.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Text.Encoding.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Text.RegularExpressions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Overlapped.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Tasks.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Tasks.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Thread.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.ThreadPool.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Timer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.ReaderWriter.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XDocument.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XmlDocument.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XmlSerializer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XPath.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XPath.XDocument.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\Workitems\ThrowBusinessRuleExceptionDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\Workitems\BulkAddWorkitemsDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\Workitems\AddWorkitemDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\BreakableDoWhileDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\Workitems\DeleteWorkitemDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\ForEachOfDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\ContinueDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\BreakDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\GetWorkflowInstanceDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\MoveElementDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\FocusElementDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\BreakableWhileDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\Workitems\PopWorkitemDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\ShowBalloonTipDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\MoveMouseDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\ClickElementDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\CloseApplicationDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\CommentOutDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\CopyClipboardDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\DetectorDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\ForEachDataRowDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\HighlightElementDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\InsertClipboardDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\InvokeOpenFlowDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\InvokeRemoteOpenRPADesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\InvokeOpenRPADesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\OpenApplicationDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\StopOpenRPADesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\TypeTextDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Activities\Workitems\UpdateWorkitemDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\App.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\AgentWindow.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\AgentViewProjects.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\ChildSession.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\PendingToken.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\WorkitemQueue.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\WorkItemQueuesView.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\PackageManager.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\WorkflowInstances.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\InsertSelect.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\RecorderPlugins.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\RunPlugins.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\Snippets.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\MainWindow.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\CloseableHeader.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\DetectorsView.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\EditXAML.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\InsertText.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\KeyboardSeqWindow.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\OpenProject.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\PermissionsWindow.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\selectUserWindow.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\showVariables.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\WelcomeWindow.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\WFDesigner.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\Views\wfToolbox.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\OpenRPA_Content.g.cs" />
+    <Compile Include="D:\projects\openrpa\OpenRPA\obj\Debug\net48\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>
