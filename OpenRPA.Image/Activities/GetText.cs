@@ -50,9 +50,9 @@ namespace OpenRPA.Image
             ocr.TesseractDownloadLangFile(path, "osd");
 
             ImageElement[] result;
-            var _ocr = new Emgu.CV.OCR.Tesseract(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-            _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-            _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
+            using (var _ocr = new Tesseract.TesseractEngine(path, lang.ToString(), Tesseract.EngineMode.Default))
+            {
+                _ocr.DefaultPageSegMode = Tesseract.PageSegMode.SparseText;
 
             // OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
             Bitmap sourceimg = null;
@@ -64,7 +64,7 @@ namespace OpenRPA.Image
             {
                 sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
             }
-            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
+            using (var img = sourceimg.ToImage<Emgu.CV.Structure.Bgr, byte>())
             {
                 result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
             }
@@ -76,6 +76,7 @@ namespace OpenRPA.Image
                 Log.Debug("Found: '" + R.Text + "' at " + R.Rectangle.ToString());
             }
             return result;
+        }
         }
         protected override void StartLoop(NativeActivityContext context)
         {
@@ -94,9 +95,9 @@ namespace OpenRPA.Image
             // var result = ocr.GetTextcomponents(path, Config.local.ocrlanguage, @"c:\temp\dump.png");
 
             ImageElement[] result;
-            var _ocr = new Emgu.CV.OCR.Tesseract(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-            _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-            _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
+            using (var _ocr = new Tesseract.TesseractEngine(path, lang.ToString(), Tesseract.EngineMode.Default))
+            {
+                _ocr.DefaultPageSegMode = Tesseract.PageSegMode.SparseText;
 
             // OpenRPA.Interfaces.Image.Util.SaveImageStamped(ele.element, "OCR");
             Bitmap sourceimg = null;
@@ -108,7 +109,7 @@ namespace OpenRPA.Image
             {
                 sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
             }
-            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
+            using (var img = sourceimg.ToImage<Emgu.CV.Structure.Bgr, byte>())
             {
                 result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
             }
@@ -118,6 +119,7 @@ namespace OpenRPA.Image
                 var rect = new System.Drawing.Rectangle(R.Rectangle.X + ele.Rectangle.X, R.Rectangle.Y + ele.Rectangle.Y, R.Rectangle.Width, R.Rectangle.Height);
                 R.Rectangle = rect;
                 Log.Debug("Found: '" + R.Text + "' at " + R.Rectangle.ToString());
+            }
             }
             context.SetValue(Result, result);
 

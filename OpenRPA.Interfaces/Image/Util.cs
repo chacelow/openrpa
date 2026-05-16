@@ -219,7 +219,7 @@ namespace OpenRPA.Interfaces.Image
             string SigBase64 = string.Empty;
             using (var ms = new System.IO.MemoryStream())
             {
-                image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 SigBase64 = Convert.ToBase64String(ms.GetBuffer());
             }
             return SigBase64;

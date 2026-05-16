@@ -69,84 +69,79 @@ namespace OpenRPA.Image
             graphics.CopyFromScreen(rect.X, rect.Y, 0, 0, _image.Size);
             ModelItem.Properties["Image"].SetValue(Interfaces.Image.Util.Bitmap2Base64(_image));
             NotifyPropertyChanged("Image");
-            var element = AutomationHelper.GetFromPoint(rect.X, rect.Y);
-            if (element != null)
-            {
-                using (var p = System.Diagnostics.Process.GetProcessById(element.ProcessId))
-                {
-                    var Processname = p.ProcessName;
-
-                    ModelItem.Properties["Processname"].SetValue(new System.Activities.InArgument<string>(Processname));
-                }
-            }
             Interfaces.GenericTools.Restore();
 
+        }
+        private void Open_Selector(object sender, RoutedEventArgs e)
+        {
+            string SelectorString = ModelItem.GetValue<string>("Selector");
+            int maxresults = ModelItem.GetValue<int>("MaxResults");
+            Interfaces.Selector.SelectorWindow selectors;
+            if (!string.IsNullOrEmpty(SelectorString))
+            {
+                var selector = new OpenRPA.Windows.WindowsSelector(SelectorString);
+                selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, null, maxresults);
+            }
+            else
+            {
+                var selector = new OpenRPA.Windows.WindowsSelector("[{Selector: 'Windows'}]");
+                selectors = new Interfaces.Selector.SelectorWindow("Windows", selector, null, maxresults);
+            }
+            if (selectors.ShowDialog() == true)
+            {
+                ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+                var l = selectors.vm.Selector.Last();
+                if (l.Element != null)
+                {
+                    ModelItem.Properties["Image"].SetValue(l.Element.ImageString());
+                    NotifyPropertyChanged("Image");
+                }
+            }
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
-            var image = ImageString;
-            Bitmap b = Task.Run(() =>
+            try
             {
-                return Interfaces.Image.Util.LoadBitmap(image);
-            }).Result;
-            using (b)
-            {
-                var Threshold = ModelItem.GetValue<double>("Threshold");
-                var CompareGray = ModelItem.GetValue<bool>("CompareGray");
-                var Processname = ModelItem.GetValue<string>("Processname");
-                var limit = ModelItem.GetValue<Rectangle>("Limit");
-                if (Threshold < 0.5) Threshold = 0.8;
-                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(0), CompareGray, limit);
-                foreach (var r in matches)
+                var image = ImageString;
+                Log.Information("Highlight: ImageString length=" + (image?.Length ?? 0));
+                if (string.IsNullOrEmpty(image))
                 {
-                    var element = new ImageElement(r);
-                    element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
-
+                    Log.Error("Highlight: No image selected!");
+                    System.Windows.MessageBox.Show("Please select an image region first by clicking [Select area].", "Highlight", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    return;
+                }
+                Bitmap b = Task.Run(() =>
+                {
+                    return Interfaces.Image.Util.LoadBitmap(image);
+                }).Result;
+                using (b)
+                {
+                    if (b == null)
+                    {
+                        Log.Error("Highlight: Failed to load bitmap from image string");
+                        System.Windows.MessageBox.Show("Failed to load the selected image.", "Highlight", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                        return;
+                    }
+                    var Threshold = ModelItem.GetValue<double>("Threshold");
+                    var CompareGray = ModelItem.GetValue<bool>("CompareGray");
+                    var Selector = ModelItem.GetValue<string>("Selector");
+                    var MatchMode = ModelItem.GetValue<ImageMatchMode>("MatchMode");
+                    if (Threshold < 0.5) Threshold = 0.8;
+                    Log.Information(string.Format("Highlight: M={0} T={1} G={2} S={3}", MatchMode, Threshold, CompareGray, string.IsNullOrEmpty(Selector) ? "(fullscreen)" : "selector"));
+                    var matches = ImageEvent.waitFor(b, Threshold, Selector, TimeSpan.FromMilliseconds(0), CompareGray, MatchMode);
+                    Log.Information("Highlight: found " + matches.Length + " match(es)");
+                    foreach (var r in matches)
+                    {
+                        var element = new ImageElement(r);
+                        element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
+                    }
                 }
             }
-        }
-        private async void ProcessLimit_Click(object sender, RoutedEventArgs e)
-        {
-            var Processname = ModelItem.GetValue<string>("Processname");
-            var p = System.Diagnostics.Process.GetProcessesByName(Processname).FirstOrDefault();
-            if (p == null) return;
-
-            var allChildWindows = new WindowHandleInfo(p.MainWindowHandle).GetAllChildHandles();
-            allChildWindows.Add(p.MainWindowHandle);
-            var template = new Rectangle(0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
-            Rectangle windowrect = Rectangle.Empty;
-            foreach (var window in allChildWindows)
+            catch (Exception ex)
             {
-                WindowHandleInfo.RECT rct;
-                if (!WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
-                {
-                    continue;
-                }
-                var _rect = new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left + 1, rct.Bottom - rct.Top + 1);
-                if (_rect.Width < template.Width && _rect.Height < template.Height)
-                {
-                    continue;
-                }
-                if ((_rect.X > 0 || (_rect.X + _rect.Width) > 0) &&
-                        (_rect.Y > 0 || (_rect.Y + _rect.Height) > 0))
-                {
-                    windowrect = _rect;
-                    continue;
-                }
+                Log.Error("Highlight_Click exception: " + ex.ToString());
+                System.Windows.MessageBox.Show("Highlight error: " + ex.Message, "Highlight", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
-
-            Interfaces.GenericTools.Minimize();
-            var rect = await getrectangle.GetitAsync();
-
-            var limit = new System.Drawing.Rectangle(rect.X - (int)windowrect.X, rect.Y - (int)windowrect.Y, rect.Width, rect.Height);
-            ModelItem.Properties["Limit"].SetValue(new System.Activities.InArgument<System.Drawing.Rectangle>(limit));
-            Interfaces.GenericTools.Restore();
-            NotifyPropertyChanged("Limit");
-
-        }
-        private void ClearProcessLimit_Click(object sender, RoutedEventArgs e)
-        {
-            ModelItem.Properties["Limit"].ClearValue();
         }
 
         public string ImageString

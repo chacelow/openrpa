@@ -1,17 +1,13 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenRPA.Image
 {
-    using OpenRPA.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Runtime.InteropServices;
     class ImageEvent
     {
         private ImageEvent() { }
@@ -19,19 +15,31 @@ namespace OpenRPA.Image
         private System.Threading.AutoResetEvent waitHandle;
         private System.Timers.Timer timer;
         private Rectangle[] results = new Rectangle[] { };
-        private string Processname = null;
         private bool CompareGray = false;
         private bool running = false;
         private Double threshold;
-        private Rectangle limit;
+        private ImageMatchMode matchMode = ImageMatchMode.SIFT;
+        private string selector = null;
+        private Interfaces.Selector.SelectorItem selItem = null;
+
+        // Backward-compatible: old 6-param signature (Processname/Limit ignored)
         public static Rectangle[] waitFor(Bitmap Image, Double Threshold, String Processname, TimeSpan TimeOut, bool CompareGray, Rectangle Limit)
+        {
+            return waitFor(Image, Threshold, Processname, TimeOut, CompareGray, Limit, ImageMatchMode.TemplateMatching);
+        }
+        // Backward-compatible: old 7-param signature (Processname/Limit ignored)
+        public static Rectangle[] waitFor(Bitmap Image, Double Threshold, String Processname, TimeSpan TimeOut, bool CompareGray, Rectangle Limit, ImageMatchMode MatchMode)
+        {
+            return waitFor(Image, Threshold, (string)null, TimeOut, CompareGray, MatchMode);
+        }
+        // New signature with Selector
+        public static Rectangle[] waitFor(Bitmap Image, Double Threshold, String Selector, TimeSpan TimeOut, bool CompareGray, ImageMatchMode MatchMode)
         {
             var me = new ImageEvent();
             try
             {
-                me.limit = Limit;
-                me.Processname = Processname;
-                // rpaactivities.image.util.saveImage(Image, "waitFor-Image");
+                me.matchMode = MatchMode;
+                me.selector = Selector;
                 me.template = Image;
                 try
                 {
@@ -46,6 +54,13 @@ namespace OpenRPA.Image
                 me.CompareGray = CompareGray;
                 me.threshold = Threshold;
                 me.running = true;
+
+                // Pre-resolve selector to cache the window rectangle
+                if (!string.IsNullOrEmpty(me.selector))
+                {
+                    me.resolveSelector();
+                }
+
                 if (me.findMatch()) return me.results;
 
                 if (TimeOut.TotalMilliseconds < 100) return me.results;
@@ -67,7 +82,7 @@ namespace OpenRPA.Image
             }
             finally
             {
-                if(me.timer != null)
+                if (me.timer != null)
                 {
                     me.timer.Elapsed -= me.onElapsed;
                     me.timer.Dispose();
@@ -76,6 +91,26 @@ namespace OpenRPA.Image
             }
             return me.results;
         }
+
+        private void resolveSelector()
+        {
+            try
+            {
+                var sel = new OpenRPA.Windows.WindowsSelector(selector);
+                var items = sel.ToArray();
+                if (items.Length > 0)
+                {
+                    selItem = items[0];
+                    Log.Debug(string.Format("ImageEvent: selector resolved, item={0}", selItem));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("ImageEvent: failed to resolve selector: " + ex.ToString());
+                selItem = null;
+            }
+        }
+
         private void onElapsed(object sender, EventArgs e)
         {
             timer.Stop();
@@ -90,65 +125,63 @@ namespace OpenRPA.Image
                 if (running) timer.Start();
             }
         }
+
         private bool findMatch()
         {
             try
             {
                 if (!running) return false;
                 if (this.template == null) return false;
-                if (string.IsNullOrEmpty(Processname))
+
+                Rectangle searchRect;
+                if (!string.IsNullOrEmpty(selector) && selItem != null)
                 {
-                    var desktop = Interfaces.Image.Util.Screenshot();
-                    GC.KeepAlive(template);
-                    var results = Matches.FindMatches(desktop, template, threshold, 10, CompareGray);
-                    if (results.Count() > 0)
+                    // Search within selector-resolved window rectangle
+                    var elements = OpenRPA.Windows.WindowsSelector.GetElementsWithuiSelector(
+                        new OpenRPA.Windows.WindowsSelector(selector), null, 1, null);
+                    if (elements == null || elements.Length == 0)
                     {
-                        this.results = results;
-                        return true;
+                        Log.Information("ImageEvent.findMatch: selector resolved but window not found");
+                        return false;
+                    }
+                    searchRect = elements[0].Rectangle;
+                    // Ensure minimum size for matching
+                    if (searchRect.Width < template.Width || searchRect.Height < template.Height)
+                    {
+                        Log.Information(string.Format("ImageEvent.findMatch: window {0}x{1} too small for template {2}x{3}",
+                            searchRect.Width, searchRect.Height, template.Width, template.Height));
+                        return false;
                     }
                 }
                 else
                 {
-                    var ps = System.Diagnostics.Process.GetProcessesByName(Processname);
-                    foreach (var p in ps)
-                    {
-                        var rects2 = new List<Rectangle>();
-                        if (!running) return false;
-                        if (this.template == null) return false;
-                        var rects = MyEnumWindows.WindowRects(this, true, p, limit, template.Width, template.Height);
-                        // Log.Information("searcing " + rects.Length + " windows for image");
-                        if (!running) return false;
-                        if (this.template == null) return false;
-                        foreach (var rect in rects)
-                        {
-                            var desktop = Interfaces.Image.Util.Screenshot(rect);
-                            try
-                            {
-                                var results = Matches.FindMatches(desktop, template, threshold, 10, CompareGray);
-                                if (results.Count() > 0)
-                                {
-                                    var finalresult = new List<Rectangle>();
-                                    for (var i = 0; i < results.Length; i++)
-                                    {
-                                        results[i].X += rect.X;
-                                        results[i].Y += rect.Y;
-                                    }
-                                    this.results = results;
-                                    return true;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Trace.WriteLine(ex.ToString());
-                            }
-                        }
+                    // Full-screen search
+                    searchRect = new Rectangle(0, 0,
+                        System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
+                        System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+                }
 
+                var desktop = Interfaces.Image.Util.Screenshot(searchRect);
+                GC.KeepAlive(template);
+                        var results = matchMode == ImageMatchMode.TemplateMatching
+                                ? Matches.FindMatchesMultiScale(desktop, template, threshold, 10, CompareGray)
+                                : Matches.FindCvMatches(desktop, template, threshold, 10, matchMode);
+
+                if (results.Length > 0)
+                {
+                    // Offset results to absolute screen coordinates
+                    for (var i = 0; i < results.Length; i++)
+                    {
+                        results[i].X += searchRect.X;
+                        results[i].Y += searchRect.Y;
                     }
+                    this.results = results;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Error("ImageEvent.findMatch: " + ex.ToString());
             }
             return false;
         }

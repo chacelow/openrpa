@@ -29,23 +29,24 @@ namespace OpenRPA.Image
             Threshold = 0.8;
             MaxResults = 10;
             MinResults = 1;
+            MatchMode = ImageMatchMode.SIFT;
         }
         public InArgument<TimeSpan> Timeout { get; set; }
-        public InArgument<string> Processname { get; set; }
+        public InArgument<string> Selector { get; set; }
         public InArgument<bool> CompareGray { get; set; }
         public InArgument<double> Threshold { get; set; }
+        public ImageMatchMode MatchMode { get; set; } = ImageMatchMode.TemplateMatching;
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
         public InArgument<ImageElement> From { get; set; }
         public OutArgument<ImageElement[]> Elements { get; set; }
-        public InArgument<Rectangle> Limit { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
         public Activity LoopAction { get; set; }
-        private List<ImageElement> getBatch(int minresults, int maxresults, Double Threshold, string Processname, TimeSpan Timeout, bool CompareGray, Rectangle limit)
+        private List<ImageElement> getBatch(int minresults, int maxresults, Double Threshold, string Selector, TimeSpan Timeout, bool CompareGray, ImageMatchMode matchMode)
         {
             var result = new List<ImageElement>();
             Bitmap b = null;
@@ -64,7 +65,7 @@ namespace OpenRPA.Image
                     stream = new MemoryStream(Convert.FromBase64String(Image));
                     b = new Bitmap(stream);
                 }
-                var matches = ImageEvent.waitFor(b, Threshold, Processname, Timeout, CompareGray, limit);
+                var matches = ImageEvent.waitFor(b, Threshold, Selector, Timeout, CompareGray, matchMode);
                 if (matches.Count() > maxresults) matches = matches.Take(maxresults).ToArray();
                 if (Timeout.TotalMilliseconds > 100)
                 {
@@ -100,12 +101,11 @@ namespace OpenRPA.Image
             var timeout = Timeout.Get(context);
             if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
-            var processname = Processname.Get(context);
+            var selector = Selector.Get(context);
             var comparegray = CompareGray.Get(context);
             var threshold = Threshold.Get(context);
             var minresults = MinResults.Get(context);
-            var from = From.Get(context);
-            var limit = Limit.Get(context);
+            var matchmode = MatchMode;
             if (maxresults < 1) maxresults = 1;
             if (threshold < 0.1) threshold = 0.1;
             if (threshold > 1) threshold = 1;
@@ -115,7 +115,7 @@ namespace OpenRPA.Image
             sw.Start();
             do
             {
-                elements = getBatch(minresults, maxresults, threshold, processname, timeout, comparegray, limit).ToArray();
+                elements = getBatch(minresults, maxresults, threshold, selector, timeout, comparegray, matchmode).ToArray();
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             // Log.Debug(string.Format("OpenRPA.Image::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
             context.SetValue(Elements, elements);
@@ -161,10 +161,9 @@ namespace OpenRPA.Image
             Interfaces.Extensions.AddCacheArgument(metadata, "Elements", Elements);
             Interfaces.Extensions.AddCacheArgument(metadata, "MaxResults", MaxResults);
             Interfaces.Extensions.AddCacheArgument(metadata, "MinResults", MinResults);
-            Interfaces.Extensions.AddCacheArgument(metadata, "Processname", Processname);
+            Interfaces.Extensions.AddCacheArgument(metadata, "Selector", Selector);
             Interfaces.Extensions.AddCacheArgument(metadata, "CompareGray", CompareGray);
             Interfaces.Extensions.AddCacheArgument(metadata, "Timeout", Timeout);
-            Interfaces.Extensions.AddCacheArgument(metadata, "Limit", Limit);
 
             metadata.AddImplementationVariable(_elements);
             base.CacheMetadata(metadata);

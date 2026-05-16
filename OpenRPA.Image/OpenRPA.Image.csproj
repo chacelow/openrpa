@@ -97,7 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\image.png" Pack="true" PackagePath="\" />
-    <PackageReference Include="Emgu.CV" Version="4.1.1.3497" />
+    <PackageReference Include="Emgu.CV" Version="4.13.0.5924" />
+    <PackageReference Include="Emgu.CV.Bitmap" Version="4.13.0.5924" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.13.0.5924" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetColorDesigner.xaml">
@@ -127,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+    <ProjectReference Include="..\OpenRPA.Windows\OpenRPA.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -174,6 +178,12 @@
   </Target>
   <Target Name="PostBuild" AfterTargets="Pack" Condition="'$(Configuration)' == 'PrepInstaller'">
     <Exec Command="copy $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg C:\code\OpenRPA\packages" />
+  </Target>
+  <Target Name="CopyEmguCVRuntime" AfterTargets="Build">
+    <ItemGroup>
+      <EmguCvNative Include="$(NuGetPackageRoot)emgu.cv.runtime.windows\4.13.0.5924\runtimes\win-x64\native\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(EmguCvNative)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>

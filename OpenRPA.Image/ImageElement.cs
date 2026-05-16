@@ -169,8 +169,9 @@ namespace OpenRPA.Image
         public void Dispose()
         {
             if (_element != null) _element.Dispose();
+            if (_ocr != null) { _ocr.Dispose(); _ocr = null; }
         }
-        private Emgu.CV.OCR.Tesseract _ocr;
+        private Tesseract.TesseractEngine _ocr;
         public string Value
         {
             get
@@ -186,12 +187,12 @@ namespace OpenRPA.Image
                     string path = System.IO.Path.Combine(basepath, "tessdata");
                     ocr.TesseractDownloadLangFile(path, Config.local.ocrlanguage);
                     ocr.TesseractDownloadLangFile(path, "osd");
-                    _ocr = new Emgu.CV.OCR.Tesseract(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-                    _ocr.Init(path, lang.ToString(), Emgu.CV.OCR.OcrEngineMode.TesseractLstmCombined);
-                    _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
+                    if (_ocr != null) { _ocr.Dispose(); _ocr = null; }
+                    _ocr = new Tesseract.TesseractEngine(path, lang.ToString(), Tesseract.EngineMode.Default);
+                    _ocr.DefaultPageSegMode = Tesseract.PageSegMode.SparseText;
 
                     // OpenRPA.Interfaces.Image.Util.SaveImageStamped(element, "OCR");
-                    using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(element))
+                    using (var img = element.ToImage<Emgu.CV.Structure.Bgr, byte>())
                     {
                         return ocr.OcrImage(_ocr, img.Mat);
                     }

@@ -184,7 +184,7 @@ namespace OpenRPA.Image
             //var point = new System.Drawing.Point(x - elementx, y - elementy);
             var point = new System.Drawing.Point(x, y);
 
-            var saveimage = new Image<Emgu.CV.Structure.Bgr, Byte>(desktopb);
+            var saveimage = desktopb.ToImage<Emgu.CV.Structure.Bgr, Byte>();
             foreach (var match in con)
             {
                 saveimage.Draw(match, new Emgu.CV.Structure.Bgr(System.Drawing.Color.Red), 2);
@@ -277,7 +277,7 @@ namespace OpenRPA.Image
 
             if (rect != System.Drawing.Rectangle.Empty)
             {
-                saveimage = new Image<Emgu.CV.Structure.Bgr, Byte>(desktopb);
+                saveimage = desktopb.ToImage<Emgu.CV.Structure.Bgr, Byte>();
                 saveimage.Draw(rect, new Emgu.CV.Structure.Bgr(System.Drawing.Color.Red), 2);
                 // rpaactivities.image.util.saveImage(saveimage, "GuessContour-result");
                 saveimage.Dispose();
@@ -307,7 +307,7 @@ namespace OpenRPA.Image
             double cannyThreshold = 180.0;
             Emgu.CV.Structure.LineSegment2D[] lines;
             UMat cannyEdges = new UMat();
-            using (var img = new Image<Emgu.CV.Structure.Bgr, Byte>(bitmap))
+            using (var img = bitmap.ToImage<Emgu.CV.Structure.Bgr, Byte>())
             {
                 using (UMat uimage = new UMat())
                 {
