@@ -19,9 +19,70 @@ namespace OpenRPA
     /// </summary>
     public partial class App : Application, ISingleInstanceApp
     {
+        public static System.Windows.Forms.Form _splashForm;
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern IntPtr CreateRoundRectRgn(int nL, int nT, int nR, int nB, int nWE, int nHE);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
         [STAThread]
         public static void Main()
         {
+            // Show native WinForms splash instantly (before WPF assemblies load)
+            var splashThread = new System.Threading.Thread(() =>
+            {
+                _splashForm = new System.Windows.Forms.Form()
+                {
+                    FormBorderStyle = System.Windows.Forms.FormBorderStyle.None,
+                    StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen,
+                    Size = new System.Drawing.Size(420, 340),
+                    TopMost = true,
+                    ShowInTaskbar = false,
+                    BackColor = System.Drawing.Color.White
+                };
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OpenRPA-logo.png");
+                var logo = new System.Windows.Forms.PictureBox()
+                {
+                    Image = System.Drawing.Image.FromFile(logoPath),
+                    SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom,
+                    Size = new System.Drawing.Size(100, 100),
+                    Location = new System.Drawing.Point(160, 30)
+                };
+                var title = new System.Windows.Forms.Label()
+                {
+                    Text = "OpenRPA",
+                    Font = new System.Drawing.Font("Segoe UI", 24, System.Drawing.FontStyle.Regular),
+                    ForeColor = System.Drawing.Color.FromArgb(45, 45, 45),
+                    AutoSize = true,
+                    Location = new System.Drawing.Point(130, 140)
+                };
+                var status = new System.Windows.Forms.Label()
+                {
+                    Text = "◌ 正在启动...",
+                    Font = new System.Drawing.Font("Segoe UI", 10),
+                    ForeColor = System.Drawing.Color.FromArgb(100, 100, 100),
+                    AutoSize = true,
+                    Location = new System.Drawing.Point(140, 200),
+                    Name = "StatusLabel"
+                };
+                _splashForm.Controls.Add(logo);
+                _splashForm.Controls.Add(title);
+                _splashForm.Controls.Add(status);
+                _splashForm.Load += (s, ev) => {
+                    var rgn = CreateRoundRectRgn(0, 0, _splashForm.Width + 1, _splashForm.Height + 1, 16, 16);
+                    SetWindowRgn(_splashForm.Handle, rgn, true);
+                };
+                _splashForm.Show();
+                // Spin animation timer
+                var spinChars = new[] { "◌", "◐", "◓", "◑", "◒" };
+                int spinIdx = 0;
+                var spinTimer = new System.Windows.Forms.Timer { Interval = 150 };
+                spinTimer.Tick += (s, ev) => { spinIdx = (spinIdx + 1) % spinChars.Length; status.Text = spinChars[spinIdx] + " " + GetCurrentStatus(); };
+                spinTimer.Start();
+                System.Windows.Forms.Application.Run();
+            });
+            splashThread.SetApartmentState(System.Threading.ApartmentState.STA);
+            splashThread.Start();
+
             if (SingleInstance<App>.InitializeAsFirstInstance("OpenRPA"))
             {
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
@@ -257,7 +318,9 @@ namespace OpenRPA
 
                 RobotInstance.instance.Status += App_Status;
                 Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
+                SetSplashStatus("加载插件...", "");
                 Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
+                SetSplashStatus("初始化...", "");
                 RobotInstance.instance.Initialize();
             }
             catch (Exception ex)
@@ -284,17 +347,28 @@ namespace OpenRPA
                 }
             });
         }
+        private static string _splashStatus = "正在启动...";
+        private static string GetCurrentStatus() => _splashStatus;
+
+        public static void SetSplashStatus(string status, string module)
+        {
+            _splashStatus = status;
+            if (_splashForm != null && _splashForm.IsHandleCreated)
+                _splashForm.Invoke((Action)(() => {
+                    foreach (System.Windows.Forms.Control c in _splashForm.Controls)
+                        if (c is System.Windows.Forms.Label l && l.Name == "StatusLabel")
+                            l.Text = l.Text.Substring(0, 2) + status;
+                }));
+        }
+
         private void App_Status(string message)
         {
             try
             {
                 Log.Debug(message);
-                // notifyIcon.ShowBalloonTip(5000, "Title", message, System.Windows.Forms.ToolTipIcon.Info);
-                // if (splash != null) splash.BusyContent = message;
+                SetSplashStatus(message, "");
             }
-            catch (Exception)
-            {
-            }
+            catch (Exception) { }
         }
     }
 }

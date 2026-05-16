@@ -136,6 +136,12 @@ namespace OpenRPA
                 Log.Error(ex.ToString());
                 throw;
             }
+            // Close WinForms splash after all initialization done
+            var sf = App._splashForm;
+            if (sf != null && sf.IsHandleCreated)
+            {
+                sf.Invoke((Action)(() => { sf.Close(); System.Windows.Forms.Application.ExitThread(); }));
+            }
             Log.FunctionOutdent("MainWindow", "Window_Loaded");
         }
         internal static MainWindow instance;
