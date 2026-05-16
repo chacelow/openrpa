@@ -64,6 +64,8 @@
 		<None Include="Resources\openrpa.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Fluent.Ribbon" Version="9.0.4" />
+		<PackageReference Include="HandyControl" Version="3.3.0" />
 		<PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
 		<PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />

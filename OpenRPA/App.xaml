@@ -14,15 +14,11 @@
     -->
     <Application.Resources>
         <ResourceDictionary>
-<!--             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ToastNotifications.Messages;component/Themes/Default.xaml"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            -->
-
-            <!--You have to add other style here only-->
-
         </ResourceDictionary>
-         
     </Application.Resources>
     
 </Application>
