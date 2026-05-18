@@ -334,85 +334,97 @@
             </avalonDock:DockingManager.LayoutItemContainerStyle>
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel Orientation="Horizontal">
-                    <avalonDock:LayoutAnchorablePaneGroup  DockWidth="270" Orientation="Horizontal" >
+
+                    <avalonDock:LayoutAnchorablePaneGroup DockWidth="270" DockMinWidth="180">
                         <avalonDock:LayoutAnchorablePane>
-                            <avalonDock:LayoutAnchorable x:Name="dockToolbox"  
-                            CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static or:strings.dock_toolbox}" ContentId="Toolbox" 
-                            >
-                                <ContentControl Content="{Binding Toolbox}" Padding="0" Margin="0,0,0,0" />
+                            <avalonDock:LayoutAnchorable x:Name="dockToolbox" IsActive="True"
+                            CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static or:strings.dock_toolbox}" ContentId="Toolbox">
+                                <ContentControl Content="{Binding Toolbox}" Padding="0" Margin="0,0,0,0"/>
                             </avalonDock:LayoutAnchorable>
 
                             <avalonDock:LayoutAnchorable x:Name="dockSnippets" 
-                            CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static or:strings.dock_snippets}" ContentId="Snippets"
-                            >
-                                <ContentControl Content="{Binding Snippets}" Padding="0" Margin="0,0,0,0" />
+                            CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static or:strings.dock_snippets}" ContentId="Snippets">
+                                <ContentControl Content="{Binding Snippets}" Padding="0" Margin="0,0,0,0"/>
                             </avalonDock:LayoutAnchorable>
-
                         </avalonDock:LayoutAnchorablePane>                            
                     </avalonDock:LayoutAnchorablePaneGroup>
-                    
-                    <avalonDock:LayoutDocumentPane x:Name="dockpane">
-                    </avalonDock:LayoutDocumentPane>
+
+                    <avalonDock:LayoutPanel Orientation="Vertical">
+                        <avalonDock:LayoutDocumentPaneGroup>
+                            <avalonDock:LayoutDocumentPane x:Name="dockpane">
+                            </avalonDock:LayoutDocumentPane>
+                        </avalonDock:LayoutDocumentPaneGroup>
+                        <avalonDock:LayoutDocumentPaneGroup Orientation="Horizontal" DockMinHeight="100">
+                            <avalonDock:LayoutDocumentPane>
+                                <avalonDock:LayoutDocument CanClose="False" x:Name="Output" Title="{x:Static or:strings.dock_output}" ContentId="Output">
+                                    <Grid Background="White">
+                                        <Grid.Resources>
+                                            <ResourceDictionary>
+                                                <ResourceDictionary.MergedDictionaries>
+                                                    <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+                                                </ResourceDictionary.MergedDictionaries>
+                                            </ResourceDictionary>
+                                        </Grid.Resources>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Background="#F3F4F6" Padding="4,2" BorderBrush="#E2E6EB" BorderThickness="0,0,0,1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Click="clearOutputMessages_Click" Content="Clear" Height="22" FontSize="11" Padding="8,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBox Grid.Row="1" Text="{Binding Tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False"
+                                                 VerticalScrollBarVisibility="Auto" BorderThickness="0" FontFamily="Consolas" FontSize="12" Padding="4"
+                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                    </Grid>
+                                </avalonDock:LayoutDocument>
+                                <avalonDock:LayoutDocument CanClose="False" x:Name="Logging" Title="{x:Static or:strings.dock_logging}" ContentId="Logging">
+                                    <Grid Background="White">
+                                        <Grid.Resources>
+                                            <ResourceDictionary>
+                                                <ResourceDictionary.MergedDictionaries>
+                                                    <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+                                                </ResourceDictionary.MergedDictionaries>
+                                            </ResourceDictionary>
+                                        </Grid.Resources>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Background="#F3F4F6" Padding="4,2" BorderBrush="#E2E6EB" BorderThickness="0,0,0,1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Click="clearTraceMessages_Click" Content="Clear" Height="22" FontSize="11" Padding="8,0" Margin="0,0,8,0"/>
+                                                <Separator/>
+                                                <CheckBox IsChecked="{Binding Setting_log_output}" Content="Output" Margin="4,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                                <CheckBox IsChecked="{Binding Setting_log_warning}" Content="Warning" Margin="4,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                                <CheckBox IsChecked="{Binding Setting_log_debug}" Content="Debug" Margin="4,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                                <CheckBox IsChecked="{Binding Setting_log_verbose}" Content="Verbose" Margin="4,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                                <CheckBox IsChecked="{Binding Setting_log_selector}" Content="Selector" Margin="4,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBox Grid.Row="1" Text="{Binding Tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False"
+                                                 VerticalScrollBarVisibility="Auto" BorderThickness="0" FontFamily="Consolas" FontSize="12" Padding="4"
+                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                    </Grid>
+                                </avalonDock:LayoutDocument>
+                                <avalonDock:LayoutDocument CanClose="False" x:Name="WorkflowInstances" Title="{x:Static or:strings.dock_workflowinstances}" ContentId="WorkflowInstances">
+                                    <views:WorkflowInstances Workflow="{Binding CurrentWorkflow, ElementName=TheMainWindow}"/>
+                                </avalonDock:LayoutDocument>
+                            </avalonDock:LayoutDocumentPane>
+                        </avalonDock:LayoutDocumentPaneGroup>
+                    </avalonDock:LayoutPanel>
 
                     <avalonDock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="300">
                             <avalonDock:LayoutAnchorablePane>
-                                <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False" Title="{x:Static or:strings.dock_properties}" ContentId="Properties" 
+                                <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="False" CanFloat="True" Title="{x:Static or:strings.dock_properties}" ContentId="Properties" 
                                                          >
-                                    <ContentControl Content="{Binding Path=LastDesigner.Properties}" Padding="0" Margin="0,0,0,0" />
+                                    <ContentControl Content="{Binding Path=LastDesigner.Properties}" Padding="0" Margin="0,0,0,0"/>
                                 </avalonDock:LayoutAnchorable>
                             </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
 
                 </avalonDock:LayoutPanel>
-
-                <avalonDock:LayoutRoot.BottomSide>
-                    <avalonDock:LayoutAnchorSide>
-                        <avalonDock:LayoutAnchorGroup>
-                                <avalonDock:LayoutAnchorable
-                                CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Logging" Title="{x:Static or:strings.dock_logging}" ContentId="Logging" >
-                                    <DockPanel>
-                                        <StackPanel HorizontalAlignment="Left">
-                                            <Button DockPanel.Dock="Top" Height="20" Width="20" Click="clearTraceMessages_Click" >X</Button>
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_output}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectoroutput}" />
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_warning}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.warning}" />
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_debug}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.debug}" />
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.verbose}" />
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_selector}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selector}"/>
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_selector_verbose}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectorverbose}" />
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_network}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectornetwork}" />
-                                            <RibbonCheckBox IsChecked="{Binding Setting_log_activity}" Command="{Binding Data.LoggingOptionCommand, Source={StaticResource proxy}}" 
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" ToolTip="{x:Static or:strings.selectoractivity}" />
-                                        </StackPanel>
-                                        <TextBox DockPanel.Dock="Bottom" Text="{Binding Tracing.TraceMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-                                    </DockPanel>
-                                </avalonDock:LayoutAnchorable>
-
-                                <avalonDock:LayoutAnchorable
-                                                     CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="Output" Title="{x:Static or:strings.dock_output}" ContentId="Output" >
-                                    <DockPanel>
-                                        <StackPanel HorizontalAlignment="Left">
-                                            <Button DockPanel.Dock="Top" Height="20" Width="20" Click="clearOutputMessages_Click" >X</Button>
-                                        </StackPanel>
-                                        <TextBox Text="{Binding Tracing.OutputMessages}" TextWrapping="Wrap" IsReadOnly="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-                                    </DockPanel>
-                                </avalonDock:LayoutAnchorable>
-
-                                <avalonDock:LayoutAnchorable
-                                                     CanClose="False" CanAutoHide="True" CanHide="False"  x:Name="WorkflowInstances" Title="{x:Static or:strings.dock_workflowinstances}" 
-                                                         ContentId="WorkflowInstances" >
-                                    <views:WorkflowInstances Workflow="{Binding CurrentWorkflow, diag:PresentationTraceSources.TraceLevel=High, 
-                                    ElementName=TheMainWindow}"  ></views:WorkflowInstances>
-                                </avalonDock:LayoutAnchorable>
-                        </avalonDock:LayoutAnchorGroup>
-                    </avalonDock:LayoutAnchorSide>
-                </avalonDock:LayoutRoot.BottomSide>
             </avalonDock:LayoutRoot>
         </avalonDock:DockingManager>
 

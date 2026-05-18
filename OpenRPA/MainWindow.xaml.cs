@@ -4124,6 +4124,10 @@ namespace OpenRPA
         {
             Tracing.TraceMessages = "";
         }
+        private void LogFilter_Changed(object sender, RoutedEventArgs e)
+        {
+            Config.Save();
+        }
         private void clearOutputMessages_Click(object sender, RoutedEventArgs e)
         {
             Tracing.OutputMessages = "";
