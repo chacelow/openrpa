@@ -1233,4 +1233,60 @@
   <data name="workitemqueues" xml:space="preserve">
     <value>Work Item Queues</value>
   </data>
+
+  <data name="activity_threshold" xml:space="preserve">
+    <value>Threshold</value>
+  </data>
+  <data name="activity_threshold_help" xml:space="preserve">
+    <value>Minimum similarity score for image matching (0.0 to 1.0)</value>
+  </data>
+  <data name="activity_comparegray" xml:space="preserve">
+    <value>Compare Gray</value>
+  </data>
+  <data name="activity_comparegray_help" xml:space="preserve">
+    <value>Convert images to grayscale before comparison</value>
+  </data>
+  <data name="activity_maxresults" xml:space="preserve">
+    <value>Max Results</value>
+  </data>
+  <data name="activity_maxresults_help" xml:space="preserve">
+    <value>Maximum number of matching elements to return</value>
+  </data>
+  <data name="activity_minresults" xml:space="preserve">
+    <value>Min Results</value>
+  </data>
+  <data name="activity_minresults_help" xml:space="preserve">
+    <value>Minimum number of results required</value>
+  </data>
+  <data name="activity_matchmode" xml:space="preserve">
+    <value>Match Mode</value>
+  </data>
+  <data name="activity_matchmode_help" xml:space="preserve">
+    <value>Image matching algorithm (SIFT/AKAZE/KAZE/ORB/TemplateMatching)</value>
+  </data>
+  <data name="activity_from" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="activity_from_help" xml:space="preserve">
+    <value>Source image element to search from</value>
+  </data>
+  <data name="activity_elements" xml:space="preserve">
+    <value>Elements</value>
+  </data>
+  <data name="activity_elements_help" xml:space="preserve">
+    <value>Resulting matched elements</value>
+  </data>
+
+  <data name="activity_clickratiox" xml:space="preserve">
+    <value>Click Ratio X</value>
+  </data>
+  <data name="activity_clickratiox_help" xml:space="preserve">
+    <value>Horizontal click position as ratio of element width (0.0-1.0)</value>
+  </data>
+  <data name="activity_clickratioy" xml:space="preserve">
+    <value>Click Ratio Y</value>
+  </data>
+  <data name="activity_clickratioy_help" xml:space="preserve">
+    <value>Vertical click position as ratio of element height (0.0-1.0)</value>
+  </data>
 </root>

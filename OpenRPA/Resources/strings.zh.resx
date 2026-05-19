@@ -750,4 +750,60 @@
 	<data name="warning" xml:space="preserve">
     <value>警告</value>
   </data>
+
+  <data name="activity_threshold" xml:space="preserve">
+    <value>阈值</value>
+  </data>
+  <data name="activity_threshold_help" xml:space="preserve">
+    <value>图像匹配的最低相似度分数 (0.0 到 1.0)</value>
+  </data>
+  <data name="activity_comparegray" xml:space="preserve">
+    <value>灰度比较</value>
+  </data>
+  <data name="activity_comparegray_help" xml:space="preserve">
+    <value>对比前将图像转换为灰度</value>
+  </data>
+  <data name="activity_maxresults" xml:space="preserve">
+    <value>最大结果数</value>
+  </data>
+  <data name="activity_maxresults_help" xml:space="preserve">
+    <value>返回的匹配元素最大数量</value>
+  </data>
+  <data name="activity_minresults" xml:space="preserve">
+    <value>最小结果数</value>
+  </data>
+  <data name="activity_minresults_help" xml:space="preserve">
+    <value>需要的最小结果数</value>
+  </data>
+  <data name="activity_matchmode" xml:space="preserve">
+    <value>匹配模式</value>
+  </data>
+  <data name="activity_matchmode_help" xml:space="preserve">
+    <value>图像匹配算法 (SIFT/AKAZE/KAZE/ORB/模板匹配)</value>
+  </data>
+  <data name="activity_from" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="activity_from_help" xml:space="preserve">
+    <value>要从中搜索的源图像元素</value>
+  </data>
+  <data name="activity_elements" xml:space="preserve">
+    <value>结果元素</value>
+  </data>
+  <data name="activity_elements_help" xml:space="preserve">
+    <value>匹配到的结果元素</value>
+  </data>
+
+  <data name="activity_clickratiox" xml:space="preserve">
+    <value>点击比例X</value>
+  </data>
+  <data name="activity_clickratiox_help" xml:space="preserve">
+    <value>水平点击位置，占元素宽度的比例 (0.0-1.0)</value>
+  </data>
+  <data name="activity_clickratioy" xml:space="preserve">
+    <value>点击比例Y</value>
+  </data>
+  <data name="activity_clickratioy_help" xml:space="preserve">
+    <value>垂直点击位置，占元素高度的比例 (0.0-1.0)</value>
+  </data>
 </root>

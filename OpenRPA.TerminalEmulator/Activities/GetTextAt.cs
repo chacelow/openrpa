@@ -18,7 +18,7 @@ namespace OpenRPA.TerminalEmulator
     public class GetTextAt : CodeActivity
     {
         [LocalizedDisplayName("activity_gettextat_timeout", typeof(Resources.strings)), LocalizedDescription("activity_gettextat_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [LocalizedDisplayName("activity_gettextat_waitforkeyboard", typeof(Resources.strings)), LocalizedDescription("activity_gettextat_waitforkeyboard_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForKeyboard { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_gettextat_row", typeof(Resources.strings)), LocalizedDescription("activity_gettextat_row_help", typeof(Resources.strings))]
@@ -34,8 +34,7 @@ namespace OpenRPA.TerminalEmulator
             int row = Row.Get(context);
             int column = Column.Get(context);
             int length = Length.Get(context);
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var vars = context.DataContext.GetProperties();
             Interfaces.VT.ITerminalSession session = null;
             foreach (dynamic v in vars)

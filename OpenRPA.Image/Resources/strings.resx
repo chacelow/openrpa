@@ -249,4 +249,63 @@
   <data name="plugin_recording_mouse_move_time_help" xml:space="preserve">
     <value>Doing recording, move mouse away for X miliseconds before getting image</value>
   </data>
+
+  <data name="activity_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_timeout_help" xml:space="preserve">
+    <value>Time in seconds to wait before giving up</value>
+  </data>
+  <data name="activity_selector" xml:space="preserve">
+    <value>Selector</value>
+  </data>
+  <data name="activity_selector_help" xml:space="preserve">
+    <value>CSS/XPath selector to narrow search scope</value>
+  </data>
+  <data name="activity_threshold" xml:space="preserve">
+    <value>Threshold</value>
+  </data>
+  <data name="activity_threshold_help" xml:space="preserve">
+    <value>Minimum similarity score (0.0 to 1.0)</value>
+  </data>
+  <data name="activity_comparegray" xml:space="preserve">
+    <value>Compare Gray</value>
+  </data>
+  <data name="activity_comparegray_help" xml:space="preserve">
+    <value>Convert images to grayscale before comparison</value>
+  </data>
+  <data name="activity_matchmode" xml:space="preserve">
+    <value>Match Mode</value>
+  </data>
+  <data name="activity_matchmode_help" xml:space="preserve">
+    <value>Image matching algorithm</value>
+  </data>
+  <data name="activity_maxresults" xml:space="preserve">
+    <value>Max Results</value>
+  </data>
+  <data name="activity_maxresults_help" xml:space="preserve">
+    <value>Maximum number of results</value>
+  </data>
+  <data name="activity_minresults" xml:space="preserve">
+    <value>Min Results</value>
+  </data>
+  <data name="activity_minresults_help" xml:space="preserve">
+    <value>Minimum number of results required</value>
+  </data>
+  <data name="activity_from" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="activity_from_help" xml:space="preserve">
+    <value>Source image element</value>
+  </data>
+  <data name="activity_elements" xml:space="preserve">
+    <value>Elements</value>
+  </data>
+  <data name="activity_elements_help" xml:space="preserve">
+    <value>Result elements</value>
+  </data>
+
+  <data name="activity_getelement_open_selector" xml:space="preserve">
+    <value>Open Selector</value>
+  </data>
 </root>

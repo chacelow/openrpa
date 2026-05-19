@@ -216,4 +216,63 @@
 	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
     <value>截取整个屏幕或使用Get Element找到的特定元素的屏幕截图</value>
   </data>
+
+  <data name="activity_timeout" xml:space="preserve">
+    <value>超时</value>
+  </data>
+  <data name="activity_timeout_help" xml:space="preserve">
+    <value>等待的秒数，超时后放弃</value>
+  </data>
+  <data name="activity_selector" xml:space="preserve">
+    <value>选择器</value>
+  </data>
+  <data name="activity_selector_help" xml:space="preserve">
+    <value>CSS/XPath选择器，缩小搜索范围</value>
+  </data>
+  <data name="activity_threshold" xml:space="preserve">
+    <value>阈值</value>
+  </data>
+  <data name="activity_threshold_help" xml:space="preserve">
+    <value>最低相似度 (0.0 到 1.0)</value>
+  </data>
+  <data name="activity_comparegray" xml:space="preserve">
+    <value>灰度比较</value>
+  </data>
+  <data name="activity_comparegray_help" xml:space="preserve">
+    <value>比较前转换为灰度图像</value>
+  </data>
+  <data name="activity_matchmode" xml:space="preserve">
+    <value>匹配模式</value>
+  </data>
+  <data name="activity_matchmode_help" xml:space="preserve">
+    <value>图像匹配算法</value>
+  </data>
+  <data name="activity_maxresults" xml:space="preserve">
+    <value>最大结果数</value>
+  </data>
+  <data name="activity_maxresults_help" xml:space="preserve">
+    <value>返回结果的最大数量</value>
+  </data>
+  <data name="activity_minresults" xml:space="preserve">
+    <value>最小结果数</value>
+  </data>
+  <data name="activity_minresults_help" xml:space="preserve">
+    <value>需要的最小结果数</value>
+  </data>
+  <data name="activity_from" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="activity_from_help" xml:space="preserve">
+    <value>源图像元素</value>
+  </data>
+  <data name="activity_elements" xml:space="preserve">
+    <value>结果元素</value>
+  </data>
+  <data name="activity_elements_help" xml:space="preserve">
+    <value>匹配到的结果元素</value>
+  </data>
+
+  <data name="activity_getelement_open_selector" xml:space="preserve">
+    <value>打开选择器</value>
+  </data>
 </root>

@@ -31,7 +31,7 @@ namespace OpenRPA.Java
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<JavaElement> From { get; set; }
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         public OutArgument<JavaElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
@@ -42,8 +42,7 @@ namespace OpenRPA.Java
             var SelectorString = Selector.Get(context);
             SelectorString = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(SelectorString, context.DataContext);
             var sel = new JavaSelector(SelectorString);
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             var from = From.Get(context);

@@ -28,7 +28,7 @@ namespace OpenRPA.NM
         public ActivityAction<NMElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<NMElement> From { get; set; }
@@ -62,8 +62,7 @@ namespace OpenRPA.NM
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);

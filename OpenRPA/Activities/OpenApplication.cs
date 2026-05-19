@@ -21,7 +21,7 @@ namespace OpenRPA.Activities
         [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
         [LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [LocalizedDisplayName("activity_checkrunning", typeof(Resources.strings)), LocalizedDescription("activity_checkrunning_help", typeof(Resources.strings))]
         public InArgument<bool> CheckRunning { get; set; } = true;
 
@@ -51,8 +51,7 @@ namespace OpenRPA.Activities
             checkrunning = true;
             var pluginname = selector.First().Selector;
             var Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var element = Plugin.LaunchBySelector(selector, checkrunning, timeout);
             Result.Set(context, element);
             _element.Set(context, element);

@@ -26,7 +26,7 @@ namespace OpenRPA.Activities
         [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [RequiredArgument, LocalizedDisplayName("activity_force", typeof(Resources.strings)), LocalizedDescription("activity_force_help", typeof(Resources.strings))]
         public InArgument<bool> Force { get; set; }
         protected override void Execute(CodeActivityContext context)
@@ -36,8 +36,7 @@ namespace OpenRPA.Activities
             var selector = new Interfaces.Selector.Selector(selectorstring);
             var pluginname = selector.First().Selector;
             var Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var force = Force.Get(context);
             Plugin.CloseBySelector(selector, timeout, force);
 

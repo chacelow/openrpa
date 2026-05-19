@@ -40,7 +40,9 @@ namespace OpenRPA.Activities
         public InArgument<int> OffsetX { get; set; } = 5;
         [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
         public InArgument<int> OffsetY { get; set; } = 5;
+        [LocalizedDisplayName("activity_clickratiox", typeof(Resources.strings)), LocalizedDescription("activity_clickratiox_help", typeof(Resources.strings))]
         public InArgument<double?> ClickRatioX { get; set; }
+        [LocalizedDisplayName("activity_clickratioy", typeof(Resources.strings)), LocalizedDescription("activity_clickratioy_help", typeof(Resources.strings))]
         public InArgument<double?> ClickRatioY { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }

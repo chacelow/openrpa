@@ -25,11 +25,11 @@ namespace OpenRPA.Windows
         {
             MaxResults = 1;
             MinResults = 1;
-            Timeout = TimeSpan.FromSeconds(3);
+            Timeout = 3;
         }
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         public InArgument<int> MaxResults { get; set; }
         public InArgument<int> MinResults { get; set; }
         public InArgument<string> Selector { get; set; }
@@ -55,7 +55,7 @@ namespace OpenRPA.Windows
             var selector = Selector.Get(context);
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new WindowsSelector(selector);
-            var timeout = Timeout.Get(context);
+            var timeoutSec = Timeout.Get(context); var timeout = TimeSpan.FromSeconds(timeoutSec);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;

@@ -23,7 +23,7 @@ namespace OpenRPA.Elis.Rossum
     public class WaitForFileStatus : CodeActivity
     {
         [RequiredArgument]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [RequiredArgument]
         public InArgument<string> Key { get; set; }
         [RequiredArgument]
@@ -33,8 +33,7 @@ namespace OpenRPA.Elis.Rossum
         public OutArgument<string> Result { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(10);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 10; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var key = Key.Get(context);
             var fileurl = Fileurl.Get(context);
             var desiredstatus = Status.Get(context).ToLower();

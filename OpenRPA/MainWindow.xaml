@@ -28,7 +28,7 @@
             <RowDefinition />
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <Ribbon DockPanel.Dock="Top" Margin="0,-22,0,0" Grid.Row="0" PreviewMouseWheel="SearchBox_PreviewMouseWheel" x:Name="MainRibbon">
+        <Ribbon DockPanel.Dock="Top" Margin="0,-18,0,0" Grid.Row="0" PreviewMouseWheel="SearchBox_PreviewMouseWheel" x:Name="MainRibbon">
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
                     <RibbonApplicationMenuItem Header="{x:Static or:strings.settingsfile}" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 

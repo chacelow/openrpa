@@ -18,7 +18,7 @@ namespace OpenRPA.TerminalEmulator
     public class SetText : CodeActivity
     {
         [LocalizedDisplayName("activity_settext_timeout", typeof(Resources.strings)), LocalizedDescription("activity_settext_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [LocalizedDisplayName("activity_settext_waitforkeyboard", typeof(Resources.strings)), LocalizedDescription("activity_settext_waitforkeyboard_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForKeyboard { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_settext_field", typeof(Resources.strings)), LocalizedDescription("activity_settext_field_help", typeof(Resources.strings))]
@@ -29,8 +29,7 @@ namespace OpenRPA.TerminalEmulator
         {
             int field = Field.Get(context);
             string text = Text.Get(context);
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var vars = context.DataContext.GetProperties();
             Interfaces.VT.ITerminalSession session = null;
             foreach (dynamic v in vars)

@@ -18,7 +18,7 @@ namespace OpenRPA.TerminalEmulator
     public class WaitForText : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [LocalizedDisplayName("activity_waitfortext_timeout", typeof(Resources.strings)), LocalizedDescription("activity_waitfortext_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [LocalizedDisplayName("activity_waitfortext_found", typeof(Resources.strings)), LocalizedDescription("activity_waitfortext_found_help", typeof(Resources.strings))]
         public InArgument<bool> Found { get; set; }
         [LocalizedDisplayName("activity_waitfortext_throw", typeof(Resources.strings)), LocalizedDescription("activity_waitfortext_throw_help", typeof(Resources.strings))]
@@ -30,9 +30,9 @@ namespace OpenRPA.TerminalEmulator
         protected override void StartLoop(NativeActivityContext context)
         {
             string text = Text.Get(context);
-            var timeout = Timeout.Get(context);
+            var timeoutSec = Timeout.Get(context); var timeout = TimeSpan.FromSeconds(timeoutSec);
             var _throw = Throw.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            if (Timeout == null || Timeout.Expression == null) timeoutSec = 3;
             var vars = context.DataContext.GetProperties();
             Interfaces.VT.ITerminalSession session = null;
             foreach (dynamic v in vars) {

@@ -22,7 +22,7 @@ namespace OpenRPA.Database
         [Browsable(false)]
         public ActivityAction<Connection> Body { get; set; }
         [Browsable(false)]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [RequiredArgument]
         public InArgument<string> DataProvider { get; set; }
         [RequiredArgument]
@@ -35,7 +35,7 @@ namespace OpenRPA.Database
             var dataprovider = DataProvider.Get(context);
             var datasource = DataSource.Get(context);
             var connectionstring = ConnectionString.Get(context);
-            var timeout = Timeout.Get(context);
+            var timeoutSec = Timeout.Get(context); var timeout = TimeSpan.FromSeconds(timeoutSec);
             Connection connection = new Connection(dataprovider, datasource, connectionstring);
 
             connection.Open();

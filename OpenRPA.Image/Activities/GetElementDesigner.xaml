@@ -40,7 +40,7 @@
                         <TextBlock Text="{x:Static or:strings.activity_getelement_highlight}"></TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Content="Open Selector" Click="Open_Selector" />
+                <Button Content="{x:Static or:strings.activity_getelement_open_selector}" Click="Open_Selector" />
                 <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="{x:Static or:strings.activity_getelement_drop_hint}" AllowedItemType="sa:Activity"

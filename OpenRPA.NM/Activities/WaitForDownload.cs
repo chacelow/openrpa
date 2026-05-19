@@ -22,13 +22,13 @@ namespace OpenRPA.NM
         [System.ComponentModel.Browsable(false)]
         public ActivityAction Body { get; set; }
         public OutArgument<DetectorEvent> Event { get; set; }
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         private System.Timers.Timer timer = null;
         private IWorkflowInstance wfApp = null;
         protected override void Execute(NativeActivityContext context)
         {
             context.CreateBookmark("DownloadDetectorPlugin", new BookmarkCallback(OnBookmarkCallback));
-            var timeout = Timeout.Get(context);
+            var timeoutSec = Timeout.Get(context); var timeout = TimeSpan.FromSeconds(timeoutSec);
             if(timeout.TotalMilliseconds> 0)
             {
                 wfApp = Plugin.client.WorkflowInstances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();

@@ -29,24 +29,33 @@ namespace OpenRPA.Image
             Threshold = 0.8;
             MaxResults = 10;
             MinResults = 1;
-            MatchMode = ImageMatchMode.SIFT;
+            MatchMode = ImageMatchMode.TemplateMatching;
         }
-        public InArgument<TimeSpan> Timeout { get; set; }
+        [LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
+        public InArgument<double> Timeout { get; set; } // seconds
+        [LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
+        [LocalizedDisplayName("activity_comparegray", typeof(Resources.strings)), LocalizedDescription("activity_comparegray_help", typeof(Resources.strings))]
         public InArgument<bool> CompareGray { get; set; }
+        [LocalizedDisplayName("activity_threshold", typeof(Resources.strings)), LocalizedDescription("activity_threshold_help", typeof(Resources.strings))]
         public InArgument<double> Threshold { get; set; }
+        [LocalizedDisplayName("activity_matchmode", typeof(Resources.strings)), LocalizedDescription("activity_matchmode_help", typeof(Resources.strings))]
         public ImageMatchMode MatchMode { get; set; } = ImageMatchMode.TemplateMatching;
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<ImageElement> Body { get; set; }
+        [LocalizedDisplayName("activity_maxresults", typeof(Resources.strings)), LocalizedDescription("activity_maxresults_help", typeof(Resources.strings))]
         public InArgument<int> MaxResults { get; set; }
+        [LocalizedDisplayName("activity_minresults", typeof(Resources.strings)), LocalizedDescription("activity_minresults_help", typeof(Resources.strings))]
         public InArgument<int> MinResults { get; set; }
+        [LocalizedDisplayName("activity_from", typeof(Resources.strings)), LocalizedDescription("activity_from_help", typeof(Resources.strings))]
         public InArgument<ImageElement> From { get; set; }
+        [LocalizedDisplayName("activity_elements", typeof(Resources.strings)), LocalizedDescription("activity_elements_help", typeof(Resources.strings))]
         public OutArgument<ImageElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
         private Variable<IEnumerator<ImageElement>> _elements = new Variable<IEnumerator<ImageElement>>("_elements");
         public Activity LoopAction { get; set; }
-        private List<ImageElement> getBatch(int minresults, int maxresults, Double Threshold, string Selector, TimeSpan Timeout, bool CompareGray, ImageMatchMode matchMode)
+        private List<ImageElement> getBatch(int minresults, int maxresults, Double Threshold, string Selector, double Timeout, bool CompareGray, ImageMatchMode matchMode)
         {
             var result = new List<ImageElement>();
             Bitmap b = null;
@@ -65,9 +74,9 @@ namespace OpenRPA.Image
                     stream = new MemoryStream(Convert.FromBase64String(Image));
                     b = new Bitmap(stream);
                 }
-                var matches = ImageEvent.waitFor(b, Threshold, Selector, Timeout, CompareGray, matchMode);
+                var matches = ImageEvent.waitFor(b, Threshold, Selector, TimeSpan.FromSeconds(Timeout), CompareGray, matchMode);
                 if (matches.Count() > maxresults) matches = matches.Take(maxresults).ToArray();
-                if (Timeout.TotalMilliseconds > 100)
+                if (Timeout > 0.1)
                 {
                     if (matches.Length == 0) return result;
                 }
@@ -98,8 +107,7 @@ namespace OpenRPA.Image
         {
             if (Image == null) new ArgumentException("Image is null");
             //var timeout = TimeSpan.FromSeconds(3);
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var maxresults = MaxResults.Get(context);
             var selector = Selector.Get(context);
             var comparegray = CompareGray.Get(context);
@@ -115,7 +123,7 @@ namespace OpenRPA.Image
             sw.Start();
             do
             {
-                elements = getBatch(minresults, maxresults, threshold, selector, timeout, comparegray, matchmode).ToArray();
+                elements = getBatch(minresults, maxresults, threshold, selector, timeoutSec, comparegray, matchmode).ToArray();
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             // Log.Debug(string.Format("OpenRPA.Image::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, elements.Count()));
             context.SetValue(Elements, elements);

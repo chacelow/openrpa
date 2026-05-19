@@ -654,6 +654,30 @@ namespace OpenRPA.Resources {
             }
         }
         
+        public static string activity_clickratiox {
+            get {
+                return ResourceManager.GetString("activity_clickratiox", resourceCulture);
+            }
+        }
+        
+        public static string activity_clickratiox_help {
+            get {
+                return ResourceManager.GetString("activity_clickratiox_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_clickratioy {
+            get {
+                return ResourceManager.GetString("activity_clickratioy", resourceCulture);
+            }
+        }
+        
+        public static string activity_clickratioy_help {
+            get {
+                return ResourceManager.GetString("activity_clickratioy_help", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Click Element.
         /// </summary>
@@ -1209,6 +1233,90 @@ namespace OpenRPA.Resources {
         public static string activity_image_help {
             get {
                 return ResourceManager.GetString("activity_image_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_threshold {
+            get {
+                return ResourceManager.GetString("activity_threshold", resourceCulture);
+            }
+        }
+        
+        public static string activity_threshold_help {
+            get {
+                return ResourceManager.GetString("activity_threshold_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_comparegray {
+            get {
+                return ResourceManager.GetString("activity_comparegray", resourceCulture);
+            }
+        }
+        
+        public static string activity_comparegray_help {
+            get {
+                return ResourceManager.GetString("activity_comparegray_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_maxresults {
+            get {
+                return ResourceManager.GetString("activity_maxresults", resourceCulture);
+            }
+        }
+        
+        public static string activity_maxresults_help {
+            get {
+                return ResourceManager.GetString("activity_maxresults_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_minresults {
+            get {
+                return ResourceManager.GetString("activity_minresults", resourceCulture);
+            }
+        }
+        
+        public static string activity_minresults_help {
+            get {
+                return ResourceManager.GetString("activity_minresults_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_matchmode {
+            get {
+                return ResourceManager.GetString("activity_matchmode", resourceCulture);
+            }
+        }
+        
+        public static string activity_matchmode_help {
+            get {
+                return ResourceManager.GetString("activity_matchmode_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_from {
+            get {
+                return ResourceManager.GetString("activity_from", resourceCulture);
+            }
+        }
+        
+        public static string activity_from_help {
+            get {
+                return ResourceManager.GetString("activity_from_help", resourceCulture);
+            }
+        }
+        
+        public static string activity_elements {
+            get {
+                return ResourceManager.GetString("activity_elements", resourceCulture);
+            }
+        }
+        
+        public static string activity_elements_help {
+            get {
+                return ResourceManager.GetString("activity_elements_help", resourceCulture);
             }
         }
         

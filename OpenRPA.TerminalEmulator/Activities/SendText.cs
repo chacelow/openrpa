@@ -20,14 +20,13 @@ namespace OpenRPA.TerminalEmulator
         [RequiredArgument, LocalizedDisplayName("activity_sendtext_text", typeof(Resources.strings)), LocalizedDescription("activity_sendtext_text_help", typeof(Resources.strings))]
         public InArgument<string> Text { get; set; }
         [LocalizedDisplayName("activity_sendtext_timeout", typeof(Resources.strings)), LocalizedDescription("activity_sendtext_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [LocalizedDisplayName("activity_sendtext_waitforkeyboard", typeof(Resources.strings)), LocalizedDescription("activity_sendtext_waitforkeyboard_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForKeyboard { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             string text = Text.Get(context);
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             var vars = context.DataContext.GetProperties();
             Interfaces.VT.ITerminalSession session = null;
             foreach (dynamic v in vars)

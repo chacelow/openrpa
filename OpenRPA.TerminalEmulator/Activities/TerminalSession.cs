@@ -21,7 +21,7 @@ namespace OpenRPA.TerminalEmulator
     public class TerminalSession : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [LocalizedDisplayName("activity_terminalsession_timeout", typeof(Resources.strings)), LocalizedDescription("activity_terminalsession_timeout_help", typeof(Resources.strings))]
-        public InArgument<TimeSpan> Timeout { get; set; }
+        public InArgument<double> Timeout { get; set; } // seconds
         [RequiredArgument]
         [LocalizedDisplayName("activity_terminalsession_hostname", typeof(Resources.strings)), LocalizedDescription("activity_terminalsession_hostname_help", typeof(Resources.strings))]
         public InArgument<string> Hostname { get; set; }
@@ -41,8 +41,7 @@ namespace OpenRPA.TerminalEmulator
         protected override void StartLoop(NativeActivityContext context)
         {
             Interfaces.VT.ITerminalSession session = null;
-            var timeout = Timeout.Get(context);
-            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
+            var timeoutSec = Timeout.Get(context); if (Timeout == null || Timeout.Expression == null) timeoutSec = 3; var timeout = TimeSpan.FromSeconds(timeoutSec);
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             GenericTools.RunUI(() =>
             {
