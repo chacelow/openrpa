@@ -5,30 +5,59 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="900">
+
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding recorderPlugins}" x:Key="recorderPlugins" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource Source="{Binding recorderPlugins}" x:Key="recorderPlugins" />
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" MinWidth="160" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <TreeView x:Name="lidtDetectors" ItemsSource="{Binding recorderPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4"  >
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=Name}"></TextBlock>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
-            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Margin="0,4,0,4" />
-        </Grid>
+        <!-- Left Panel: Plugin List -->
+        <TreeView Grid.Column="0"
+                  x:Name="lidtDetectors" 
+                  ItemsSource="{Binding recorderPlugins}" 
+                  Background="White"
+                  BorderThickness="0"
+                  Padding="4,4,8,4">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="Margin" Value="0,1" />
+                    <Setter Property="Padding" Value="4,3" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OpenRPA;component/Resources/Buttons/Button.png" 
+                               Width="16" Height="16" Margin="0,0,6,0" />
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" 
+                                   TextTrimming="CharacterEllipsis" MaxWidth="180"
+                                   ToolTip="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
 
-    </DockPanel>
+        <!-- Separator -->
+        <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" 
+                      ResizeDirection="Columns" Width="2" Background="#E2E6EB" />
+
+        <!-- Right Panel: Plugin Editor -->
+        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" 
+                              Margin="12,8,12,8"
+                              ClipToBounds="False" />
+        </ScrollViewer>
+    </Grid>
 </UserControl>

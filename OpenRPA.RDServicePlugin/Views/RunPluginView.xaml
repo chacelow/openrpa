@@ -4,48 +4,113 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.RDServicePlugin.Views"
-            xmlns:or="clr-namespace:OpenRPA.RDServicePlugin.Resources"
+             xmlns:or="clr-namespace:OpenRPA.RDServicePlugin.Resources"
              mc:Ignorable="d" Unloaded="UserControl_Unloaded" Loaded="UserControl_Loaded"
-             d:DesignHeight="450" d:DesignWidth="800"
-             >
-    <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,52,0,0" Text="{x:Static or:strings.plugin_use_free_rdp}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,52,0,0" VerticalAlignment="Top" Width="222" x:Name="chkUseFreeRDP" 
-                  Checked="chkUseFreeRDP_IsEnabledChanged" Unchecked="chkUseFreeRDP_IsEnabledChanged" Click="chkUseFreeRDP_Click" />
+             d:DesignHeight="500" d:DesignWidth="700">
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,72,0,0" Text="{x:Static or:strings.plugin_executable}" VerticalAlignment="Top" Width="110" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="139,72,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblExecutable" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="120" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,92,0,0" Text="{x:Static or:strings.plugin_windows_username}" VerticalAlignment="Top" Width="110" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="139,92,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblWindowsusername" />
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static or:strings.plugin_use_free_rdp}" 
+                       VerticalAlignment="Center" Margin="0,0,12,4" />
+            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkUseFreeRDP" 
+                      VerticalAlignment="Center" Margin="0,0,0,4"
+                      Checked="chkUseFreeRDP_IsEnabledChanged" Unchecked="chkUseFreeRDP_IsEnabledChanged" 
+                      Click="chkUseFreeRDP_Click" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,121,0,0" Text="{x:Static or:strings.plugin_windows_login}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="139,121,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="lblWindowsLogin" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static or:strings.plugin_executable}" 
+                       VerticalAlignment="Center" Margin="0,0,12,4" />
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="lblExecutable" 
+                     VerticalAlignment="Center" Margin="0,0,0,4" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,149,0,0" Text="{x:Static or:strings.plugin_windows_password}" VerticalAlignment="Top" Width="110" />
-        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="139,149,0,0" VerticalAlignment="Top" Width="222" x:Name="windowspassword" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static or:strings.plugin_windows_username}" 
+                       VerticalAlignment="Center" Margin="0,0,12,4" />
+            <TextBox Grid.Row="2" Grid.Column="1" x:Name="lblWindowsusername" 
+                     VerticalAlignment="Center" Margin="0,0,0,4" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,177,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_add_user}" Click="AddcurrentuserButtonClick" x:Name="AddcurrentuserButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,205,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_remove_user}" Click="RemovecurrentuserClick" x:Name="RemovecurrentuserButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,233,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_reauth}" Click="ReauthenticateButtonClick" x:Name="ReauthenticateButton"></Button>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static or:strings.plugin_windows_login}" 
+                       VerticalAlignment="Center" Margin="0,0,12,6" />
+            <TextBox Grid.Row="3" Grid.Column="1" x:Name="lblWindowsLogin" 
+                     VerticalAlignment="Center" Margin="0,0,0,6" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,261,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_start_service}" Click="StartServiceButtonClick" x:Name="StartServiceButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,308,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_stop_service}" Click="StopServiceButtonClick" x:Name="StopServiceButton"></Button>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static or:strings.plugin_windows_password}" 
+                       VerticalAlignment="Center" Margin="0,0,12,6" />
+            <PasswordBox Grid.Row="4" Grid.Column="1" x:Name="windowspassword" 
+                         VerticalAlignment="Center" Margin="0,0,0,6" />
 
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,338,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_install_service}" Click="InstallServiceButtonClick" x:Name="InstallServiceButton"></Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="139,368,0,0" VerticalAlignment="Top" Width="222" Content="{x:Static or:strings.plugin_button_uninstall_service}" Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton"></Button>
+            <Button Grid.Row="5" Grid.Column="1" Content="{x:Static or:strings.plugin_button_add_user}" 
+                    Click="AddcurrentuserButtonClick" x:Name="AddcurrentuserButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,4" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,398,0,0" Text="{x:Static or:strings.plugin_reload_interval}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="139,398,0,0" Text="" VerticalAlignment="Top" Width="222" x:Name="txtreloadinterval" TextChanged="txtreloadinterval_TextChanged" />
+            <Button Grid.Row="6" Grid.Column="1" Content="{x:Static or:strings.plugin_button_remove_user}" 
+                    Click="RemovecurrentuserClick" x:Name="RemovecurrentuserButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,4" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="23,428,0,0" Text="{x:Static or:strings.plugin_auto_signout}" VerticalAlignment="Top" Width="110" />
-        <CheckBox Height="23" HorizontalAlignment="Left" Margin="139,428,0,0" VerticalAlignment="Top" Width="222" x:Name="chkautosignout" 
-                  Checked="chkautosignout_Checked" Unchecked="chkautosignout_Checked" Click="chkautosignout_Click" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="161,16,0,0" Text="{x:Static or:strings.plugin_rdp_width}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="277,16,0,0" Text="" VerticalAlignment="Top" Width="80" x:Name="plugin_rdp_width" TextChanged="plugin_rdp_TextChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="161,44,0,0" Text="{x:Static or:strings.plugin_rdp_height}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="277,44,0,0" Text="" VerticalAlignment="Top" Width="80" x:Name="plugin_rdp_height" TextChanged="plugin_rdp_TextChanged" />
+            <Button Grid.Row="7" Grid.Column="1" Content="{x:Static or:strings.plugin_button_reauth}" 
+                    Click="ReauthenticateButtonClick" x:Name="ReauthenticateButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,4" />
 
+            <Button Grid.Row="8" Grid.Column="1" Content="{x:Static or:strings.plugin_button_start_service}" 
+                    Click="StartServiceButtonClick" x:Name="StartServiceButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,4" />
 
-    </Grid>
+            <Button Grid.Row="9" Grid.Column="1" Content="{x:Static or:strings.plugin_button_stop_service}" 
+                    Click="StopServiceButtonClick" x:Name="StopServiceButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,4" />
+
+            <Button Grid.Row="10" Grid.Column="1" Content="{x:Static or:strings.plugin_button_install_service}" 
+                    Click="InstallServiceButtonClick" x:Name="InstallServiceButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,4" />
+
+            <Button Grid.Row="11" Grid.Column="1" Content="{x:Static or:strings.plugin_button_uninstall_service}" 
+                    Click="UninstallServiceButtonClick" x:Name="UninstallServiceButton" 
+                    HorizontalAlignment="Left" Padding="10,6" Margin="0,0,0,6" />
+
+            <TextBlock Grid.Row="12" Grid.Column="0" Text="{x:Static or:strings.plugin_reload_interval}" 
+                       VerticalAlignment="Center" Margin="0,0,12,4" />
+            <TextBox Grid.Row="12" Grid.Column="1" x:Name="txtreloadinterval" 
+                     VerticalAlignment="Center" TextChanged="txtreloadinterval_TextChanged" Margin="0,0,0,4" />
+
+            <TextBlock Grid.Row="13" Grid.Column="0" Text="{x:Static or:strings.plugin_auto_signout}" 
+                       VerticalAlignment="Center" Margin="0,0,12,4" />
+            <CheckBox Grid.Row="13" Grid.Column="1" x:Name="chkautosignout" 
+                      VerticalAlignment="Center" Margin="0,0,0,4"
+                      Checked="chkautosignout_Checked" Unchecked="chkautosignout_Checked" 
+                      Click="chkautosignout_Click" />
+
+            <TextBlock Grid.Row="14" Grid.Column="0" Text="{x:Static or:strings.plugin_rdp_width}" 
+                       VerticalAlignment="Center" Margin="0,0,12,4" />
+            <TextBox Grid.Row="14" Grid.Column="1" x:Name="plugin_rdp_width" 
+                     VerticalAlignment="Center" Width="80" HorizontalAlignment="Left"
+                     TextChanged="plugin_rdp_TextChanged" Margin="0,0,0,4" />
+
+            <TextBlock Grid.Row="15" Grid.Column="0" Text="{x:Static or:strings.plugin_rdp_height}" 
+                       VerticalAlignment="Center" Margin="0,0,12,0" />
+            <TextBox Grid.Row="15" Grid.Column="1" x:Name="plugin_rdp_height" 
+                     VerticalAlignment="Center" Width="80" HorizontalAlignment="Left"
+                     TextChanged="plugin_rdp_TextChanged" />
+        </Grid>
+    </ScrollViewer>
 </UserControl>

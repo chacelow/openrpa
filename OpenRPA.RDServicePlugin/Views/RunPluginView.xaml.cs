@@ -180,6 +180,11 @@ namespace OpenRPA.RDServicePlugin.Views
         {
             try
             {
+                if (global.webSocketClient == null || !global.webSocketClient.isConnected)
+                {
+                    InstallServiceButton.IsEnabled = true;
+                    return;
+                }
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
                 string windowsusername = NativeMethods.GetProcessUserName(System.Diagnostics.Process.GetCurrentProcess().Id).ToLower();

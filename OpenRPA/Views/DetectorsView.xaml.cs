@@ -86,11 +86,23 @@ namespace OpenRPA.Views
         //}
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            Log.FunctionIndent("DetectorsView", "Button_Click");
+            var btn = sender as System.Windows.Controls.Button;
+            var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
+            await AddDetector(kv);
+        }
+        private bool updateUIList = false;
+        private async void CmbAddDetector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbAddDetector.SelectedIndex < 0) return;
+            var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)cmbAddDetector.SelectedItem;
+            cmbAddDetector.SelectedIndex = -1;
+            await AddDetector(kv);
+        }
+        private async Task AddDetector(System.Collections.Generic.KeyValuePair<string, System.Type> kv)
+        {
+            Log.FunctionIndent("DetectorsView", "AddDetector");
             try
             {
-                var btn = sender as System.Windows.Controls.Button;
-                var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
                 var d = new Detector(); d.Plugin = kv.Value.FullName;
                 NotifyPropertyChanged("detectorPlugins");
                 d.name = kv.Value.Name;
@@ -117,9 +129,8 @@ namespace OpenRPA.Views
             {
                 Log.Error(ex.ToString());
             }
-            Log.FunctionOutdent("DetectorsView", "Button_Click");
+            Log.FunctionOutdent("DetectorsView", "AddDetector");
         }
-        private bool updateUIList = false;
         private async void LidtDetectors_KeyUp(object sender, KeyEventArgs e)
         {
             Log.FunctionIndent("DetectorsView", "LidtDetectors_KeyUp");
@@ -212,6 +223,53 @@ namespace OpenRPA.Views
         private void listType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+        private async void Button_DeleteDetector_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (lidtDetectors.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("请先选择一个探测器。");
+                    return;
+                }
+                var msg = "确定要删除选中的探测器吗？\n此操作不可撤销。";
+                var messageBoxResult = MessageBox.Show(msg, "删除确认", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (messageBoxResult != MessageBoxResult.Yes) return;
+                updateUIList = true;
+                var index = lidtDetectors.SelectedIndex;
+                var items = new List<object>();
+                foreach (var item in lidtDetectors.SelectedItems) items.Add(item);
+                foreach (var item in items)
+                {
+                    var d = item as IDetectorPlugin;
+                    if (d != null)
+                    {
+                        var entity = d.Entity as Detector;
+                        if (entity != null)
+                        {
+                            entity.Stop();
+                            await entity.Delete();
+                            RobotInstance.instance.Detectors.Remove(entity);
+                        }
+                    }
+                }
+                if (index > -1)
+                {
+                    if (index >= lidtDetectors.Items.Count)
+                    {
+                        index = lidtDetectors.Items.Count - 1;
+                    }
+                    if (index > -1)
+                    {
+                        ((ListBoxItem)lidtDetectors.ItemContainerGenerator.ContainerFromIndex((lidtDetectors.Items.Count > 1 ? (index == 0 ? 1 : index - 1) : 0)))?.Focus();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
 }

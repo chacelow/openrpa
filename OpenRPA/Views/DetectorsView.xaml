@@ -4,84 +4,138 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenRPA.Views"
-             xmlns:projectbase="clr-namespace:OpenRPA"
+             xmlns:or="clr-namespace:OpenRPA.Resources"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="900">
+
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding DetectorTypes}" x:Key="DetectorTypes" />
-        <local:NotNullConverter x:Key="NotNullConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource Source="{Binding DetectorTypes}" x:Key="DetectorTypes" />
+            <local:NotNullConverter x:Key="NotNullConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel>
-        <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar x:Name="toolbar" ItemsSource="{Binding Source={StaticResource DetectorTypes}}" >
-                <ToolBar.ItemTemplate>
-                    <DataTemplate>
-                        <Button ToolTip="{Binding Key}" Click="Button_Click" Margin="5,0,5,0">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/OpenRPA;component/Resources/Buttons/Button.png" />
-                                <TextBlock Margin="3,0,0,0" Text="Add " />
-                                <TextBlock Margin="3,0,0,0" Text="{Binding Value.Name}" />
-                            </StackPanel>
-                        </Button>
-                    </DataTemplate>
-                </ToolBar.ItemTemplate>
-            </ToolBar>
-        </ToolBarTray>
-        <Grid>
+    <DockPanel Background="White">
+
+        <!-- Top Toolbar -->
+        <Border DockPanel.Dock="Top" Background="White" BorderBrush="#E2E6EB" 
+                BorderThickness="0,0,0,1" Padding="8,6">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="cmbAddDetector"
+                          Width="160"
+                          ItemsSource="{Binding Source={StaticResource DetectorTypes}}"
+                          DisplayMemberPath="Key"
+                          SelectionChanged="CmbAddDetector_SelectionChanged">
+                </ComboBox>
+                <Button Content="{x:Static or:strings.delete}" 
+                        Click="Button_DeleteDetector_Click"
+                        MinWidth="50" Margin="7,0,0,0" Padding="5,0" />
+            </StackPanel>
+        </Border>
+
+        <Grid Background="White">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition  />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="220" MinWidth="160" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="28" />
-                <RowDefinition Height="28" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
 
-            <ListBox SelectionMode="Extended" x:Name="lidtDetectors" 
-                     ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Grid.RowSpan="3" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp">
+            <!-- Left Panel: Detector List -->
+            <ListBox Grid.Column="0"
+                     SelectionMode="Extended" 
+                     x:Name="lidtDetectors" 
+                     ItemsSource="{Binding detectorPlugins}" 
+                     Background="White"
+                     BorderThickness="0"
+                     Padding="0,4"
+                     KeyUp="LidtDetectors_KeyUp">
                 <ListBox.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="8,4">
+                            <Image Source="/OpenRPA;component/Resources/state/sensor.png" 
+                                   Width="16" Height="16" Margin="0,0,6,0" />
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" 
+                                       TextTrimming="CharacterEllipsis" MaxWidth="160"
+                                       ToolTip="{Binding Name}" />
                         </StackPanel>
-                    </HierarchicalDataTemplate>
+                    </DataTemplate>
                 </ListBox.ItemTemplate>
-
             </ListBox>
 
-            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
-            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-                <TextBlock>Project</TextBlock>
-                <ComboBox x:Name="listProjects" ItemsSource="{Binding Projects, Mode=OneTime}" BorderThickness="0"  Margin="0,0,0,0"
-                     SelectedValuePath="_id" SelectedValue="{Binding ElementName=lidtDetectors, Path=SelectedValue.Entity.projectid, Converter={StaticResource NotNullConverter}}"
-                          SelectionChanged="listProjects_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Path=name}"></TextBlock>
-                            </StackPanel>
-                        </HierarchicalDataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+            <!-- Separator -->
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" 
+                          ResizeDirection="Columns" Width="2" Background="#E2E6EB" />
 
-            </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
-                <TextBlock>Type</TextBlock>
-                <ComboBox x:Name="listType" BorderThickness="0"  Margin="0,0,0,0"
-                          SelectedValue="{Binding ElementName=lidtDetectors, Path=SelectedValue.Entity.detectortype, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedValuePath="Content"
-                          SelectionChanged="listType_SelectionChanged"
-                          >
-                    <ComboBoxItem></ComboBoxItem>
-                    <ComboBoxItem>exchange</ComboBoxItem>
-                    <ComboBoxItem>queue</ComboBoxItem>
-                </ComboBox>
+            <!-- Right Panel -->
+            <Grid Grid.Column="2" Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            </StackPanel>
-            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Grid.Row="2" Margin="0,4,0,4" />
+                <!-- Configuration Section -->
+                <Border Grid.Row="0" Margin="12,12,12,8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="60" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{x:Static or:strings.open_edit}" 
+                                   FontWeight="Bold" Margin="0,0,0,10" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" 
+                                   Text="{x:Static or:strings.project}" 
+                                   VerticalAlignment="Center" Margin="0,0,8,8" />
+                        <ComboBox Grid.Row="1" Grid.Column="1"
+                                  x:Name="listProjects" 
+                                  ItemsSource="{Binding Projects, Mode=OneTime}" 
+                                  BorderThickness="0"
+                                  SelectedValuePath="_id" 
+                                  SelectedValue="{Binding ElementName=lidtDetectors, Path=SelectedValue.Entity.projectid, Converter={StaticResource NotNullConverter}}"
+                                  SelectionChanged="listProjects_SelectionChanged"
+                                  Margin="0,0,0,8">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding name}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" 
+                                   Text="{x:Static or:strings.type}" 
+                                   VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Row="2" Grid.Column="1"
+                                  x:Name="listType" BorderThickness="0"
+                                  SelectedValue="{Binding ElementName=lidtDetectors, Path=SelectedValue.Entity.detectortype, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="Content"
+                                  SelectionChanged="listType_SelectionChanged">
+                            <ComboBoxItem></ComboBoxItem>
+                            <ComboBoxItem>exchange</ComboBoxItem>
+                            <ComboBoxItem>queue</ComboBoxItem>
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <!-- Separator -->
+                <Border Grid.Row="0" Height="1" Background="#E2E6EB" 
+                        VerticalAlignment="Bottom" Margin="12,0,12,0" />
+
+                <!-- Plugin Editor -->
+                <ContentPresenter Grid.Row="1"
+                                  Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" 
+                                  Margin="12,8,12,8"
+                                  ClipToBounds="False" />
+            </Grid>
         </Grid>
-
     </DockPanel>
 </UserControl>
