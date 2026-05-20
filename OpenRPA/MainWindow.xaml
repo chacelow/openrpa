@@ -354,9 +354,9 @@
                             <avalonDock:LayoutDocumentPane x:Name="dockpane">
                             </avalonDock:LayoutDocumentPane>
                         </avalonDock:LayoutDocumentPaneGroup>
-                        <avalonDock:LayoutDocumentPaneGroup Orientation="Horizontal" DockMinHeight="100">
-                            <avalonDock:LayoutDocumentPane>
-                                <avalonDock:LayoutDocument CanClose="False" x:Name="Output" Title="{x:Static or:strings.dock_output}" ContentId="Output">
+                        <avalonDock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockMinHeight="100" DockHeight="150">
+                            <avalonDock:LayoutAnchorablePane>
+                                <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="True" CanFloat="True" x:Name="OutputAnchorable" Title="{x:Static or:strings.dock_output}" ContentId="Output">
                                     <Grid Background="White">
                                         <Grid.Resources>
                                             <ResourceDictionary>
@@ -378,8 +378,8 @@
                                                  VerticalScrollBarVisibility="Auto" BorderThickness="0" FontFamily="Consolas" FontSize="12" Padding="4"
                                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                     </Grid>
-                                </avalonDock:LayoutDocument>
-                                <avalonDock:LayoutDocument CanClose="False" x:Name="Logging" Title="{x:Static or:strings.dock_logging}" ContentId="Logging">
+                                </avalonDock:LayoutAnchorable>
+                                <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="True" CanFloat="True" x:Name="LoggingAnchorable" Title="{x:Static or:strings.dock_logging}" ContentId="Logging">
                                     <Grid Background="White">
                                         <Grid.Resources>
                                             <ResourceDictionary>
@@ -407,12 +407,12 @@
                                                  VerticalScrollBarVisibility="Auto" BorderThickness="0" FontFamily="Consolas" FontSize="12" Padding="4"
                                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                     </Grid>
-                                </avalonDock:LayoutDocument>
-                                <avalonDock:LayoutDocument CanClose="False" x:Name="WorkflowInstances" Title="{x:Static or:strings.dock_workflowinstances}" ContentId="WorkflowInstances">
+                                </avalonDock:LayoutAnchorable>
+                                <avalonDock:LayoutAnchorable CanClose="False" CanAutoHide="True" CanHide="True" CanFloat="True" x:Name="WorkflowInstancesAnchorable" Title="{x:Static or:strings.dock_workflowinstances}" ContentId="WorkflowInstances">
                                     <views:WorkflowInstances Workflow="{Binding CurrentWorkflow, ElementName=TheMainWindow}"/>
-                                </avalonDock:LayoutDocument>
-                            </avalonDock:LayoutDocumentPane>
-                        </avalonDock:LayoutDocumentPaneGroup>
+                                </avalonDock:LayoutAnchorable>
+                            </avalonDock:LayoutAnchorablePane>
+                        </avalonDock:LayoutAnchorablePaneGroup>
                     </avalonDock:LayoutPanel>
 
                     <avalonDock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="300">
