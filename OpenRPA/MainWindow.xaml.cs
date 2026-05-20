@@ -2008,7 +2008,7 @@ namespace OpenRPA
                 }
             }
             var view = new Views.WorkItemQueuesView(this);
-            LayoutDocument layoutDocument = new LayoutDocument { Title = "Work Item Queues" };
+            LayoutDocument layoutDocument = new LayoutDocument { Title = OpenRPA.Resources.strings.workitemqueues };
             layoutDocument.ContentId = "workitemqueues";
             layoutDocument.Content = view;
             MainTabControl.Children.Add(layoutDocument);
@@ -2029,7 +2029,7 @@ namespace OpenRPA
                 }
             }
             var view = new Views.WorkItemQueuesView(this);
-            LayoutDocument layoutDocument = new LayoutDocument { Title = "Work Item Queues" };
+            LayoutDocument layoutDocument = new LayoutDocument { Title = OpenRPA.Resources.strings.workitemqueues };
             layoutDocument.ContentId = "workitemqueues";
             layoutDocument.Content = view;
             MainTabControl.Children.Add(layoutDocument);

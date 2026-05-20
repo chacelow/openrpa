@@ -3479,5 +3479,113 @@ namespace OpenRPA.Resources {
                 return ResourceManager.GetString("workitemqueues", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue Configuration.
+        /// </summary>
+        public static string wiq_configuration {
+            get {
+                return ResourceManager.GetString("wiq_configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue Parameters.
+        /// </summary>
+        public static string wiq_parameters {
+            get {
+                return ResourceManager.GetString("wiq_parameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Retries.
+        /// </summary>
+        public static string wiq_maxretries {
+            get {
+                return ResourceManager.GetString("wiq_maxretries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry Delay (s).
+        /// </summary>
+        public static string wiq_retrydelay {
+            get {
+                return ResourceManager.GetString("wiq_retrydelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial Delay (s).
+        /// </summary>
+        public static string wiq_initialdelay {
+            get {
+                return ResourceManager.GetString("wiq_initialdelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success / Failed Queues.
+        /// </summary>
+        public static string wiq_success_failed {
+            get {
+                return ResourceManager.GetString("wiq_success_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AMQP Queue.
+        /// </summary>
+        public static string wiq_amqp {
+            get {
+                return ResourceManager.GetString("wiq_amqp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purge All Workitems.
+        /// </summary>
+        public static string wiq_purge {
+            get {
+                return ResourceManager.GetString("wiq_purge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workitems.
+        /// </summary>
+        public static string wiq_workitems {
+            get {
+                return ResourceManager.GetString("wiq_workitems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a workitem queue from the left panel.
+        /// </summary>
+        public static string wiq_empty_hint {
+            get {
+                return ResourceManager.GetString("wiq_empty_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Priority.
+        /// </summary>
+        public static string wiq_priority {
+            get {
+                return ResourceManager.GetString("wiq_priority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retries.
+        /// </summary>
+        public static string wiq_retries {
+            get {
+                return ResourceManager.GetString("wiq_retries", resourceCulture);
+            }
+        }
     }
 }

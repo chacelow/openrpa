@@ -1289,4 +1289,41 @@
   <data name="activity_clickratioy_help" xml:space="preserve">
     <value>Vertical click position as ratio of element height (0.0-1.0)</value>
   </data>
+
+  <data name="wiq_configuration" xml:space="preserve">
+    <value>Queue Configuration</value>
+  </data>
+  <data name="wiq_parameters" xml:space="preserve">
+    <value>Queue Parameters</value>
+  </data>
+  <data name="wiq_maxretries" xml:space="preserve">
+    <value>Max Retries</value>
+  </data>
+  <data name="wiq_retrydelay" xml:space="preserve">
+    <value>Retry Delay (s)</value>
+  </data>
+  <data name="wiq_initialdelay" xml:space="preserve">
+    <value>Initial Delay (s)</value>
+  </data>
+  <data name="wiq_success_failed" xml:space="preserve">
+    <value>Success / Failed Queues</value>
+  </data>
+  <data name="wiq_amqp" xml:space="preserve">
+    <value>AMQP Queue</value>
+  </data>
+  <data name="wiq_purge" xml:space="preserve">
+    <value>Purge All Workitems</value>
+  </data>
+  <data name="wiq_workitems" xml:space="preserve">
+    <value>Workitems</value>
+  </data>
+  <data name="wiq_empty_hint" xml:space="preserve">
+    <value>Select a workitem queue from the left panel</value>
+  </data>
+  <data name="wiq_priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="wiq_retries" xml:space="preserve">
+    <value>Retries</value>
+  </data>
 </root>

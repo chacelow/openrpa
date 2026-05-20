@@ -160,16 +160,26 @@ namespace OpenRPA
         }
         public async Task Purge()
         {
-            throw new NotImplementedException("This feature has not been implemented, please purge queue from openflow web interface");
-            //if (string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
-            //{
-            //    var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true, "", "");
-            //} else if (string.IsNullOrEmpty( Config.local.wsurl))
-            //{
-            //    RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);
-            //    RobotInstance.instance.Workitems.Clear();
-            //    RobotInstance.instance.Workitems.AddRange(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
-            //}
+            if (global.webSocketClient != null && global.webSocketClient.isConnected)
+            {
+                await global.webSocketClient.UpdateWorkitemQueue(this, true, "", "");
+            }
+            else
+            {
+                var allWorkitems = await StorageProvider.FindAll<Workitem>();
+                var toDelete = allWorkitems.Where(x => x.wiq == name || x.wiqid == _id).ToList();
+                foreach (var wi in toDelete)
+                {
+                    await StorageProvider.Delete<Workitem>(wi._id);
+                }
+                GenericTools.RunUI(() =>
+                {
+                    foreach (var wi in toDelete)
+                    {
+                        RobotInstance.instance.Workitems.Remove(wi);
+                    }
+                });
+            }
         }
         public override string ToString()
         {

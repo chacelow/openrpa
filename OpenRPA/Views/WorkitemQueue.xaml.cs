@@ -1,4 +1,4 @@
-﻿using OpenRPA.Interfaces;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace OpenRPA.Views
 {
     /// <summary>
-    /// Interaction logic for InsertText.xaml
+    /// Interaction logic for WorkitemQueue.xaml
     /// </summary>
     public partial class WorkitemQueue : Window
     {
@@ -40,6 +40,14 @@ namespace OpenRPA.Views
         {
             if (e.Key == Key.Escape) DialogResult = false;
             if (e.Key == Key.Enter && !string.IsNullOrEmpty(txtName.Text)) DialogResult = true;
+        }
+
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 1)
+            {
+                this.DragMove();
+            }
         }
     }
 }
