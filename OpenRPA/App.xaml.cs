@@ -30,56 +30,47 @@ namespace OpenRPA
             // Show native WinForms splash instantly (before WPF assemblies load)
             var splashThread = new System.Threading.Thread(() =>
             {
-                _splashForm = new System.Windows.Forms.Form()
+                var bgPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "splash-background.png");
+                using (var bgImg = System.Drawing.Image.FromFile(bgPath))
                 {
-                    FormBorderStyle = System.Windows.Forms.FormBorderStyle.None,
-                    StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen,
-                    Size = new System.Drawing.Size(420, 340),
-                    TopMost = true,
-                    ShowInTaskbar = false,
-                    BackColor = System.Drawing.Color.White
-                };
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OpenRPA-logo.png");
-                var logo = new System.Windows.Forms.PictureBox()
-                {
-                    Image = System.Drawing.Image.FromFile(logoPath),
-                    SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom,
-                    Size = new System.Drawing.Size(100, 100),
-                    Location = new System.Drawing.Point(160, 30)
-                };
-                var title = new System.Windows.Forms.Label()
-                {
-                    Text = "OpenRPA",
-                    Font = new System.Drawing.Font("Segoe UI", 24, System.Drawing.FontStyle.Regular),
-                    ForeColor = System.Drawing.Color.FromArgb(45, 45, 45),
-                    AutoSize = true,
-                    Location = new System.Drawing.Point(130, 140)
-                };
-                var status = new System.Windows.Forms.Label()
-                {
-                    Text = "◌ 正在启动...",
-                    Font = new System.Drawing.Font("Segoe UI", 10),
-                    ForeColor = System.Drawing.Color.FromArgb(100, 100, 100),
-                    AutoSize = true,
-                    Location = new System.Drawing.Point(140, 200),
-                    Name = "StatusLabel"
-                };
-                _splashForm.Controls.Add(logo);
-                _splashForm.Controls.Add(title);
-                _splashForm.Controls.Add(status);
-                _splashForm.Load += (s, ev) => {
-                    var rgn = CreateRoundRectRgn(0, 0, _splashForm.Width + 1, _splashForm.Height + 1, 16, 16);
-                    SetWindowRgn(_splashForm.Handle, rgn, true);
-                };
-                _splashForm.Show();
-                // Spin animation timer
-                var spinChars = new[] { "◌", "◐", "◓", "◑", "◒" };
-                int spinIdx = 0;
-                var spinTimer = new System.Windows.Forms.Timer { Interval = 150 };
-                spinTimer.Tick += (s, ev) => { spinIdx = (spinIdx + 1) % spinChars.Length; status.Text = spinChars[spinIdx] + " " + GetCurrentStatus(); };
-                spinTimer.Start();
-                System.Windows.Forms.Application.Run();
-            });
+                    int fixedWidth = 600;
+                    int fixedHeight = (int)Math.Round(bgImg.Height * (float)fixedWidth / bgImg.Width);
+                    var splashBmp = new System.Drawing.Bitmap(bgImg, fixedWidth, fixedHeight);
+                    _splashForm = new System.Windows.Forms.Form()
+                    {
+                        FormBorderStyle = System.Windows.Forms.FormBorderStyle.None,
+                        StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen,
+                        Size = new System.Drawing.Size(fixedWidth, fixedHeight),
+                        TopMost = true,
+                        ShowInTaskbar = false,
+                        BackgroundImage = splashBmp,
+                        BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+                    };
+                    var status = new System.Windows.Forms.Label()
+                    {
+                        Text = "◌ 正在启动...",
+                        Font = new System.Drawing.Font("Segoe UI", 9),
+                        ForeColor = System.Drawing.Color.White,
+                        AutoSize = true,
+                        BackColor = System.Drawing.Color.Transparent,
+                        Location = new System.Drawing.Point(20, fixedHeight - 35),
+                        Name = "StatusLabel"
+                    };
+                    _splashForm.Controls.Add(status);
+                    _splashForm.Load += (s, ev) => {
+                        var rgn = CreateRoundRectRgn(0, 0, fixedWidth + 1, fixedHeight + 1, 12, 12);
+                        SetWindowRgn(_splashForm.Handle, rgn, true);
+                    };
+                    _splashForm.Show();
+                    // Spin animation timer
+                    var spinChars = new[] { "◌", "◐", "◓", "◑", "◒" };
+                    int spinIdx = 0;
+                    var spinTimer = new System.Windows.Forms.Timer { Interval = 150 };
+                    spinTimer.Tick += (s, ev) => { spinIdx = (spinIdx + 1) % spinChars.Length; status.Text = spinChars[spinIdx] + " " + GetCurrentStatus(); };
+                    spinTimer.Start();
+                    System.Windows.Forms.Application.Run();
+                } // end using bgImg
+            }); // end lambda
             splashThread.SetApartmentState(System.Threading.ApartmentState.STA);
             splashThread.Start();
 
