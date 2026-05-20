@@ -1,0 +1,118 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        default: 'revision'
+        options:
+          - revision
+          - build
+          - minor
+          - major
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get current version
+        id: current_version
+        shell: powershell
+        run: |
+          [xml]$csproj = Get-Content OpenRPA\OpenRPA.csproj
+          $version = $csproj.Project.PropertyGroup.Version
+          Write-Output "Current version: $version"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Bump version
+        id: new_version
+        shell: powershell
+        run: |
+          $v = '${{ steps.current_version.outputs.version }}'
+          $parts = $v -split '\.'
+          $bump = '${{ inputs.bump }}'
+
+          switch ($bump) {
+            'major'    { $parts[0] = [int]$parts[0] + 1; $parts[1] = 0; $parts[2] = 0; $parts[3] = 0 }
+            'minor'    { $parts[1] = [int]$parts[1] + 1; $parts[2] = 0; $parts[3] = 0 }
+            'build'    { $parts[2] = [int]$parts[2] + 1; $parts[3] = 0 }
+            'revision' { $parts[3] = [int]$parts[3] + 1 }
+          }
+
+          $newVersion = $parts -join '.'
+          Write-Output "New version: $newVersion"
+          echo "version=$newVersion" >> $env:GITHUB_OUTPUT
+
+      - name: Update version in csproj
+        shell: powershell
+        run: |
+          $newVersion = '${{ steps.new_version.outputs.version }}'
+          $file = 'OpenRPA\OpenRPA.csproj'
+          (Get-Content $file) -replace '<Version>.*</Version>', "<Version>$newVersion</Version>" | Set-Content $file
+          Write-Output "Updated $file to version $newVersion"
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: dotnet restore OpenRPA.sln --runtime win-x64
+
+      - name: Build OpenRPA.Interfaces
+        run: msbuild OpenRPA.Interfaces\OpenRPA.Interfaces.csproj /p:Configuration=Release /p:Platform="Any CPU" /v:minimal
+
+      - name: Build OpenRPA
+        run: msbuild OpenRPA\OpenRPA.csproj /p:Configuration=Release /p:Platform="Any CPU" /v:minimal
+
+      - name: Zip dist
+        shell: powershell
+        run: |
+          Compress-Archive -Path dist\* -DestinationPath openrpa-v${{ steps.new_version.outputs.version }}.zip
+
+      - name: Generate release notes
+        id: release_notes
+        shell: powershell
+        run: |
+          $prevTag = git describe --tags --abbrev=0 2>$null
+          if ($prevTag) {
+            $log = git log "$prevTag..HEAD" --pretty=format:"- %s (%an)" 2>$null
+          } else {
+            $log = git log --pretty=format:"- %s (%an)"
+          }
+          $log = $log -replace "`r`n", "%0A" -replace "`n", "%0A"
+          echo "notes=$log" >> $env:GITHUB_OUTPUT
+
+      - name: Commit version bump
+        shell: powershell
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add OpenRPA\OpenRPA.csproj
+          git commit -m "Bump version to ${{ steps.new_version.outputs.version }}"
+          git tag "v${{ steps.new_version.outputs.version }}"
+          git push origin HEAD:master
+          git push origin "v${{ steps.new_version.outputs.version }}"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.new_version.outputs.version }}
+          name: v${{ steps.new_version.outputs.version }}
+          body: |
+            ## Changes
+
+            ${{ steps.release_notes.outputs.notes }}
+          files: openrpa-v${{ steps.new_version.outputs.version }}.zip
+          draft: false
+          prerelease: false

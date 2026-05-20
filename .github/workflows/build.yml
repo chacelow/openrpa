@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: dotnet restore OpenRPA.sln --runtime win-x64
+
+      - name: Build OpenRPA.Interfaces
+        run: msbuild OpenRPA.Interfaces\OpenRPA.Interfaces.csproj /p:Configuration=Release /p:Platform="Any CPU" /v:minimal
+
+      - name: Build OpenRPA
+        run: msbuild OpenRPA\OpenRPA.csproj /p:Configuration=Release /p:Platform="Any CPU" /v:minimal
